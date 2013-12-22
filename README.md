@@ -7,20 +7,19 @@ Arduino-Webserver
                 LAN.
                 Es necesario abrir el archivo .htm desde un terminal.
 
- Hardware:      Arduino Uno y Arduino Ethernet shield. Es posible que funcione con
-                equivalentes.
+ Hardware:      Arduino Mega2560 y Arduino Ethernet shield.
                 Arduino Mini para controlar los led RGB.
-                Resistencias Pull-UP 2x4.7k ohm (SCA & SCL)
-                Las entradas y salidas se configuran en el proyecto.
+                BC548 y Resistencias de 1k ohm para cada salida RGB.
+                Resistencias Pull-UP 6.8k ohm (SCA & SCL)
 
- Software:      Desarrollado usando Arduino 1.5.4 beta
+ Software:      Desarrollado usando Arduino 1.5.4r2 beta
                 Compatible con Arduino 1.0 +
 
  References:    - WebServer example by David A. Mellis and modified by Tom Igoe
                 - Ethernet library documentation: http://arduino.cc/en/Reference/Ethernet
-                - SD Card library documentation: http://arduino.cc/en/Reference/SD
+                - SoftPWM library documentation: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
+                - Streaming library documentation: http://arduiniana.org/libraries/streaming/
 
  Fecha:         4 April 2013
- Modificado:    19 June 2013 - removed use of the String class
 
  Autor:         I. Worn
