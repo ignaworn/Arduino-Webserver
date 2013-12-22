@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=6.0, maximum-scale=1.0, user-scalable=no" />
+		<title>Arduino Ajax I/O</title>
+        <script type="text/javascript" src="javascript/FlexiColorPicker/colorpicker.js"></script>
+
+		<script>
+        var Hex;
+			var construct = true;
+			var Output = [];
+			var Get = "";
+            var request;
+
+            var I2CSlave_Led = 2;
+            var PinLed = [
+                  // R   G   B
+                    [2,  3,  4],
+                    [5,  6,  7],
+                    [8,  9,  10],
+                    [11, 12, 13],
+                    [14, 15, 16]
+            ];
+            var Led = new Array();
+
+			function GetArduinoIO()		{
+				nocache = "n=" + Math.floor(Math.random() * 100000);
+				request = new XMLHttpRequest();
+
+				request.onreadystatechange = function()			{
+					if (this.readyState == 4) {
+						if (this.status == 200) {
+							if (this.responseXML != null) {
+
+                                var AnalogXML   = this.responseXML.getElementsByTagName('a');
+                                var InputXML    = this.responseXML.getElementsByTagName('i');
+                                var OutputXML   = this.responseXML.getElementsByTagName('o');
+                                var PwmXML      = this.responseXML.getElementsByTagName('l');
+                                var ParamXML    = this.responseXML.getElementsByTagName('p');
+
+                                if (construct) {
+                                    if (AnalogXML.length == 0)
+                                        document.getElementById("analog").innerHTML += "<p>No pin is available as ANALOG</p>";
+
+                                    if (InputXML.length == 0)
+                                        document.getElementById("input").innerHTML += "<p>No pin is available as INPUT</p>";
+
+                                    if (OutputXML.length == 0)
+                                        document.getElementById("output").innerHTML += "<p>No pin is available as OUTPUT</p>";
+
+                                    if (PwmXML.length == 0)
+                                        document.getElementById("pwm").innerHTML += "<p>No pin is available as PWM</p>";
+
+                                    if (ParamXML.length == 0)
+                                        document.getElementById("param").innerHTML += "<p>There are not any editable parameters</p>";
+                                }
+
+
+
+								// Construct or refresh analog pins
+								for (var i = 0;  i < AnalogXML.length; i++) {
+									var pin     = parseInt(AnalogXML[i].getAttribute("pin"));
+                                    var i2cAddr = parseInt(AnalogXML[i].getAttribute("i2c")).toString(16);
+									var value   = AnalogXML[i].childNodes[0].nodeValue;
+
+									if (construct) {
+										document.getElementById("analog").innerHTML +=
+                                                "<div id='analog_style_" + i2cAddr + "_" + pin + "' >" +
+                                                i2cAddr + "." + pin + ": " +
+                                                "<span class='analog' id='analog_" + i2cAddr + "_" + pin + "'>" +
+                                                value +
+                                                "</span></div>";
+                                    }
+									else
+										document.getElementById("analog_" + i2cAddr + "_" + pin).innerHTML = value;
+
+								}
+
+
+
+								// Construct or refresh input pins
+								for (var i = 0;  i < InputXML.length; i++) {
+									var pin     = parseInt(InputXML[i].getAttribute("pin"));
+                                    var i2cAddr = parseInt(InputXML[i].getAttribute("i2c")).toString(16);
+									var value   = InputXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
+
+									if (construct) {
+										document.getElementById("input").innerHTML +=
+                                                "<div id='input_style_" + i2cAddr + "_" + pin + "' >" +
+                                                i2cAddr + "." + pin + ": " +
+                                                "<span class='input' id='input_" + i2cAddr + "_" + pin + "'>" +
+                                                value +
+                                                "</span></div>";
+                                    }
+                                    else
+										document.getElementById("input_" + i2cAddr + "_" + pin).innerHTML = value;
+
+                                    document.getElementById("input_style_" + i2cAddr + "_" + pin).setAttribute("class", value);
+								}
+
+
+
+                                // Construct or refresh output pins
+                                for (var i = 0;  i < OutputXML.length; i++) {
+                                    var pin     = parseInt(OutputXML[i].getAttribute("pin"));
+                                    var i2cAddr = parseInt(OutputXML[i].getAttribute("i2c")).toString(16);
+                                    var value   = OutputXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
+
+                                    if (construct)
+                                        document.getElementById("output").innerHTML +=
+                                                "<div id='output_style_" + i2cAddr + "_" + pin + "' " +
+                                                "onclick=\"SendReq('" + i2cAddr + "', 'M', '" + pin + "')\" >" +
+                                                i2cAddr + "." + pin + ": " +
+                                                "<span class='output' id='output_" + i2cAddr + "_" + pin + "'>"
+                                                + value +
+                                                "</span></div>";
+                                    else
+                                        document.getElementById("output_" + i2cAddr + "_" + pin).innerHTML = value;
+
+                                    document.getElementById("output_style_" + i2cAddr + "_" + pin).setAttribute("class", value);
+                                }
+
+
+                                /*if (construct) {
+                                    for (var i = 0;  i < PwmXML.length; i++) {
+                                        var pin     = parseInt(PwmXML[i].getAttribute("pin"));
+                                        var i2cAddr = parseInt(PwmXML[i].getAttribute("i2c")).toString(16);
+
+                                        if (i2cAddr == I2CSlave_Led) {
+                                            for (var j= 0; j<PinLed.length; j++)
+                                                if (PinLed[j].indexOf(pin) != -1)
+                                                    Led[j][PinLed[j].indexOf(Pin)] = true;
+                                        }
+
+                                    }
+
+                                    for (var i=0; i < Led.length; i++) {
+                                        var Complete = true;
+                                        if (Led[i].indexOf(false) == -1)
+                                            Complete = false;
+
+                                        Led[i].length = 0;
+                                        Led[i] = Complete;
+
+                                        if (Led[i]) {
+                                            document.getElementById("led").innerHTML +=
+                                                    "<div id='led_" + i2cAddr + "_" + i + "' " +
+                                                    "onclick=\"Led('" + i2cAddr + "', '" + i + "')\" >" +
+                                                    "Led " + i +
+                                                    "</div>";
+                                        }
+                                    }
+                                }
+                                else {
+
+                                }
+                                */
+
+                                // Construct or refresh PWM pins
+                                for (var i = 0;  i < PwmXML.length; i++) {
+                                    var pin     = parseInt(PwmXML[i].getAttribute("pin"));
+                                    var i2cAddr = parseInt(PwmXML[i].getAttribute("i2c")).toString(16);
+                                    var value   = parseInt(PwmXML[i].childNodes[0].nodeValue).toString(16).toUpperCase();
+                                        if (value.length < 2) value = "0"+value;
+
+                                    /*
+                                    if (i2cAddr)  {
+                                        for (var i=0; i< PinLed.length)
+                                            if (PinLed.indexOf(pin) != -1)
+                                                if (Led[i] == true)
+                                                    continue;
+                                    }
+                                    */
+
+
+                                    if (construct) {
+                                        document.getElementById("pwm").innerHTML +=
+                                                "<div id='pwm_style_" + i2cAddr + "_" + pin + "' " +
+                                                "onclick=\"SendReq('" + i2cAddr + "', 'L', '" + pin + "')\" >" +
+                                                i2cAddr + "." + pin + ": " +
+                                                "<span class='pwm' id='pwm_" + i2cAddr + "_" + pin + "'>" +
+                                                "0x" + value +
+                                                "</span></div>";
+                                    }
+                                    else
+                                        document.getElementById("pwm_" + i2cAddr + "_" + pin).innerHTML = "0x"+value;
+
+                                    document.getElementById("pwm_style_" + i2cAddr + "_" + pin).setAttribute("class", value);
+                                }
+
+
+
+                                // Construct or refresh parameters
+                                for (var i = 0;  i < ParamXML.length; i++) {
+                                    var id      = parseInt(ParamXML[i].getAttribute("id"));
+                                    var i2cAddr = parseInt(ParamXML[i].getAttribute("i2c")).toString(16);
+                                    var txt     = ParamXML[i].getAttribute("txt");
+                                    var value   = ParamXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
+
+                                    if (construct)
+                                        document.getElementById("param").innerHTML +=
+                                                "<div id='param_style_" + i2cAddr + "_" + id + "' " +
+                                                "onclick=\"SendReq('" + i2cAddr + "', 'P', '" + id + "')\" >" +
+                                                i2cAddr + "." + id + " <span class='txt'>(" + txt + ")</span>: " +
+                                                "<span class='param' id='param_" + i2cAddr + "_" + id + "'>"
+                                                + value + "</span></div>";
+
+                                    else
+                                        document.getElementById("param_" + i2cAddr + "_" + id).innerHTML = value;
+
+                                    document.getElementById("param_style_" + i2cAddr + "_" + id).setAttribute("class", value);
+                                }
+
+
+
+								if (construct)
+									construct = false;
+
+							}
+						}
+					}
+				}
+
+				if (Output.length > 0)
+					for (i = 0; i < Output.length; i++)
+						Get += Output[i];
+
+				request.open("GET", "http://192.168.2.40/?" + Get + nocache, true);
+				request.send(null);
+
+				Get = "";
+				Output.length = 0;
+
+				setTimeout('GetArduinoIO()', 2500);
+            }
+
+            function SendReq(i2cAddr, action, pin )		{
+                var Value, Pin;
+
+                switch (action) {
+                    case "M":
+                        document.getElementById("output_" + i2cAddr + "_" + pin).innerHTML = "...";
+                        Value = "02";
+                    break;
+                    case "P":
+                        document.getElementById("param_" + i2cAddr + "_" + pin).innerHTML = "...";
+                        Value = "02";
+                        break;
+                    case "L":
+                        Actual = parseInt(parseInt(document.getElementById("pwm_" + i2cAddr + "_" + pin).innerHTML, 16).toString(10));
+
+                        PWM = Actual + 25;
+
+                        if (PWM > 255)
+                            PWM = PWM - 255;
+
+                        Value = PWM.toString(16);
+                        if (Value.length < 2)
+                            Value = "0"+Value;
+                        break;
+                }
+
+                if (i2cAddr.length < 2)
+                    i2cAddr = "0"+i2cAddr;
+
+                Pin = parseInt(pin).toString(16);
+                if (Pin.length < 2)
+                    Pin = "0"+Pin;
+
+                Output.push( i2cAddr + action + Pin + Value +"&");
+            }
+
+            function SetLed(i2cAddr, id) {
+                id = parseInt(id);
+
+                var RGB = Hex.toString(16);
+
+                var Red     = RGB.substr(1,2);
+                var Green   = RGB.substr(3,2);
+                var Blue    = RGB.substr(5,2);
+
+                var RedPin      = parseInt(PinLed[id][0]).toString(16);
+                    if (RedPin.length < 2) RedPin = "0" + RedPin;
+                var GreenPin    = parseInt(PinLed[id][1]).toString(16);
+                    if (GreenPin.length < 2) GreenPin = "0"+GreenPin;
+                var BluePin     = parseInt(PinLed[id][2]).toString(16);
+                    if (BluePin.length < 2) BluePin = "0"+BluePin;
+
+                Output.push( i2cAddr + 'L' + RedPin     + Red       +"&");
+                Output.push( i2cAddr + 'L' + GreenPin   + Green     +"&");
+                Output.push( i2cAddr + 'L' + BluePin    + Blue      +"&");
+            }
+
+
+		</script>
+
+		<style>
+            body {
+                font-family: sans-serif;
+                font-size: 90%;
+                min-width: 320px;
+            }
+			.IO_box {
+                float: left;
+				margin: 0 20px 20px 0;
+				border: 1px solid blue;
+				width: 300px;
+			}
+			h1 {
+				font-size: 120%;
+				color: blue;
+				margin: 0 0 10px 0;
+			}
+			h2 {
+				font-size: 90%;
+				color: #5734E6;
+				margin: 5px 0;
+                padding: 10px 15px 0 15px;
+			}
+            .IO_box div div {
+                font-size: 80%;
+                font-weight: normal;
+
+                float:left;
+                width:60px;
+                padding: 10px 20px;
+
+                color: #303030;
+                cursor: default;
+            }
+
+            #param div, #led div {
+                width: 110px;
+            }
+
+            .IO_box div div span{
+                font-weight: bold;
+            }
+            .IO_box div div span.txt{
+                font-weight: normal;
+                font-size: 80%;
+            }
+            p {
+                font-size: 90%;
+
+                float: left;
+                margin-top: 0;
+                padding: 5px 20px 0;
+
+                color: #737373;
+            }
+
+            .IO_box div div.OFF  {
+                background-color: tomato;
+            }
+            .IO_box div div.ON  {
+                background-color: yellowgreen;
+            }
+
+
+
+            #picker-wrapper {
+                width: 250px;
+                height: 250px;
+                float: left;
+                margin: 10px 0px;
+                padding: 0;
+            }
+            #slider-wrapper {
+                width: 30px;
+                height: 250px;
+                float: left;
+                position: relative;
+                margin: 10px 0px;
+            }
+            #picker-indicator {
+                width: 3px;
+                height: 3px;
+                border: 1px solid white;
+                position: absolute;
+                float:none;
+            }
+            #slider-indicator {
+                width: 100%;
+                height: 10px;
+                border: 1px solid black;
+                position: absolute;
+                float:none;
+            }
+
+		</style>
+	</head>
+
+	<body onload="GetArduinoIO()">
+		<header>
+			<h1>Arduino - 192.168.2.40</h1>
+		</header>
+
+        <div class="IO_box">
+            <h2>Parameters</h2>
+            <div id="param" >
+            </div>
+        </div>
+
+        <div class="IO_box" >
+            <h2>Digital Outputs</h2>
+            <div id="output" >
+            </div>
+        </div>
+
+        <div class="IO_box">
+            <h2>PWM Outputs</h2>
+            <div id="pwm" >
+            </div>
+        </div>
+
+        <div class="IO_box">
+            <h2>Led RGB</h2>
+            <div id="led" >
+                <div id="led_2_1" onclick="SetLed('02', '0');" >Led 1</div>
+                <div id="led_2_2" onclick="SetLed('02', '1');" >Led 2</div>
+                <div id="led_2_3" onclick="SetLed('02', '2');" >Led 3</div>
+                <div id="led_2_4" onclick="SetLed('02', '3');" >Led 4</div>
+                <div id="led_2_5" onclick="SetLed('02', '4');" >Led 5</div>
+            </div>
+        </div>
+
+        <div id="picker-wrapper">
+            <div id="picker"></div>
+            <div id="picker-indicator"></div>
+        </div>
+        <div id="slider-wrapper">
+            <div id="slider"></div>
+            <div id="slider-indicator"></div>
+        </div>
+
+
+		<div class="IO_box">
+			<h2>Digital Inputs</h2>
+			<div id="input" >
+			</div>
+		</div>
+
+        <div class="IO_box">
+            <h2>Analog Inputs</h2>
+            <div id="analog" >
+            </div>
+        </div>
+
+
+
+
+
+        <script type="text/javascript">
+            ColorPicker.fixIndicators(
+                    document.getElementById('slider-indicator'),
+                    document.getElementById('picker-indicator')
+            );
+
+            ColorPicker(
+                    document.getElementById('slider'),
+                    document.getElementById('picker'),
+
+                    function(hex, hsv, rgb, pickerCoordinate, sliderCoordinate) {
+
+                        ColorPicker.positionIndicators(
+                                document.getElementById('slider-indicator'),
+                                document.getElementById('picker-indicator'),
+                                sliderCoordinate, pickerCoordinate
+                        );
+                        Hex = hex;
+                    }
+            );
+
+
+
+        </script>
+	</body>
+</html>
