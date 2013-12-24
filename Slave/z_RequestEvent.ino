@@ -79,14 +79,13 @@ void SendValue(char Type, byte Size) {
     
     // Send 16 PWM Values per page
     for (int i=0; i<Size; i++) {
-      
       switch(Type) {
-          case 'a':            buf[i] = map(analogRead(ANALOG[i]),0,1023,0,100);   
-          case 'i':            buf[i] = digitalRead(INPUTS[i]);   
-          case 'o':            buf[i] = digitalRead(OUTPUTS[i]);   
-          case 'l':            buf[i] = _PWM[i];   
-          case 'P':            buf[i] = i;   
-          case 'p':            buf[i] = Parameter[i];  
+          case 'a':            buf[i] = map(analogRead(ANALOG[i]),0,1023,0,100);   break;
+          case 'i':            buf[i] = digitalRead(INPUTS[i]);   break;
+          case 'o':            buf[i] = digitalRead(OUTPUTS[i]);   break;
+          case 'l':            buf[i] = _PWM[i];   break;
+          case 'P':            buf[i] = i;   break;
+          case 'p':            buf[i] = Parameter[i];  break;
        }
     }
     
