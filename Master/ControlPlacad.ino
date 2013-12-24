@@ -19,6 +19,9 @@ const   int CPI[2]              = {2,3};
 
 // Control Placard Output
 const   int CPO[2]              = {5,6};
+
+// Timer Active
+const   byte* CPTimer_Active = &Parameters[1];
   
   
 void ControlPlacard() {
@@ -28,11 +31,12 @@ void ControlPlacard() {
   SA1 = digitalRead(CPI[0]); 
   SB1 = digitalRead(CPI[1]);
   
-  if ( Parameters[1] and CPTimer > 0 and (millis() - CPTimer) >= CPTimeout )   {
+  if ( *CPTimer_Active and CPTimer > 0 and (millis() - CPTimer) >= CPTimeout )   {
       if(debug) Serial << endl << "Control Placard - Timeout" << endl;
       SetPin (CPO[0], LOW);
       SetPin (CPO[1], LOW);
   }
+  
   if ( SA1 != SA2) {
     if ( SA1 ) {
       if(debug) Serial << endl << "Control Placard - Door closed" << endl;
@@ -42,14 +46,14 @@ void ControlPlacard() {
     else {
       if(debug) Serial << endl << "Control Placard - Door opened" << endl;
       SetPin(CPO[0], HIGH);
-      if (Parameters[1]) {
+      if (*CPTimer_Active) {
         if(debug) Serial << "Control Placard - Started Timer" << endl;
         CPTimer = millis();
       }
     }
   }
   
-  if (Parameters[1] and CPTimer > 0 and !digitalRead(CPO[0])) {
+  if (*CPTimer_Active and CPTimer > 0 and !digitalRead(CPO[0])) {
       if(debug) Serial << "Control Placard - Timer reset" << endl;
       CPTimer = 0;
   }
