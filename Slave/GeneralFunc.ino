@@ -2,7 +2,7 @@
 //                   SET DIGITAL PIN
 // ---------------------------------------------------
 
-void SetPin (int Pin, boolean State ) {
+void SetPin (int Pin, int State ) {
     // If toggle, invert value
     if (State == 2)
       State = digitalRead(Pin) ? LOW : HIGH;
@@ -46,7 +46,7 @@ void SetPWMPin (int Pin, byte Value ) {
 // ---------------------------------------------------
 
 void SetParameters(int ID, byte Value, boolean noDelay) {
-
+    if (!noDelay)
     if (debug) Serial << "Changing parameter " << ID << " to value: " << Value;
     
     // If toggle, invert value
@@ -78,9 +78,9 @@ void SetParameters(int ID, byte Value, boolean noDelay) {
 
 void UpdateParameters(boolean Force) {
 
-    if (debug) Serial << "Updating Parameters" << endl;
+    if (UseEEPROM) {
+      if (debug) Serial << "Updating Parameters" << endl;
 
-    if (UseEEPROM)
       for (int i=0; i<SizeParameter; i++) {
         
         if (!Force)
@@ -91,6 +91,7 @@ void UpdateParameters(boolean Force) {
         // Debug: Show params and values
         if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameter[i] << endl;  
       }
+    }
 }
 
 
