@@ -92,22 +92,6 @@ void UpdateParameters() {
       }
 }
 
-// ---------------------------------------------------
-//             TEXT PARAMETERS
-// ---------------------------------------------------
-
-const char* TextParameters(byte Addr, int ID) {
-    if (Addr == I2CMaster)
-        switch (ID) {
-            case 0: return "PWM ON"; break;
-            case 1: return "CPT_Toggle"; break;
-        }
-    else if (Addr == Slave.Address() )
-        switch (ID) {
-            case 0: return "PWM ON"; break;
-        }
-}
-
 
 // ---------------------------------------------------
 //                   STR CLEAR
