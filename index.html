@@ -3,25 +3,47 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=6.0, maximum-scale=1.0, user-scalable=no" />
 		<title>Arduino Ajax I/O</title>
-        <script type="text/javascript" src="javascript/FlexiColorPicker/colorpicker.js"></script>
+        <script type="text/javascript">
+            (function(s,t,u){var v=(s.SVGAngle||t.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure","1.1")?"SVG":"VML"),picker,slide,hueOffset=15,svgNS='http://www.w3.org/2000/svg';var w=['<div class="picker-wrapper">','<div class="picker"></div>','<div class="picker-indicator"></div>','</div>','<div class="slide-wrapper">','<div class="slide"></div>','<div class="slide-indicator"></div>','</div>'].join('');function mousePosition(a){if(s.event&&s.event.contentOverflow!==u){return{x:s.event.offsetX,y:s.event.offsetY}}if(a.offsetX!==u&&a.offsetY!==u){return{x:a.offsetX,y:a.offsetY}}var b=a.target.parentNode.parentNode;return{x:a.layerX-b.offsetLeft,y:a.layerY-b.offsetTop}}function $(a,b,c){a=t.createElementNS(svgNS,a);for(var d in b)a.setAttribute(d,b[d]);if(Object.prototype.toString.call(c)!='[object Array]')c=[c];var i=0,len=(c[0]&&c.length)||0;for(;i<len;i++)a.appendChild(c[i]);return a}if(v=='SVG'){slide=$('svg',{xmlns:'http://www.w3.org/2000/svg',version:'1.1',width:'100%',height:'100%'},[$('defs',{},$('linearGradient',{id:'gradient-hsv',x1:'0%',y1:'100%',x2:'0%',y2:'0%'},[$('stop',{offset:'0%','stop-color':'#FF0000','stop-opacity':'1'}),$('stop',{offset:'13%','stop-color':'#FF00FF','stop-opacity':'1'}),$('stop',{offset:'25%','stop-color':'#8000FF','stop-opacity':'1'}),$('stop',{offset:'38%','stop-color':'#0040FF','stop-opacity':'1'}),$('stop',{offset:'50%','stop-color':'#00FFFF','stop-opacity':'1'}),$('stop',{offset:'63%','stop-color':'#00FF40','stop-opacity':'1'}),$('stop',{offset:'75%','stop-color':'#0BED00','stop-opacity':'1'}),$('stop',{offset:'88%','stop-color':'#FFFF00','stop-opacity':'1'}),$('stop',{offset:'100%','stop-color':'#FF0000','stop-opacity':'1'})])),$('rect',{x:'0',y:'0',width:'100%',height:'100%',fill:'url(#gradient-hsv)'})]);picker=$('svg',{xmlns:'http://www.w3.org/2000/svg',version:'1.1',width:'100%',height:'100%'},[$('defs',{},[$('linearGradient',{id:'gradient-black',x1:'0%',y1:'100%',x2:'0%',y2:'0%'},[$('stop',{offset:'0%','stop-color':'#000000','stop-opacity':'1'}),$('stop',{offset:'100%','stop-color':'#CC9A81','stop-opacity':'0'})]),$('linearGradient',{id:'gradient-white',x1:'0%',y1:'100%',x2:'100%',y2:'100%'},[$('stop',{offset:'0%','stop-color':'#FFFFFF','stop-opacity':'1'}),$('stop',{offset:'100%','stop-color':'#CC9A81','stop-opacity':'0'})])]),$('rect',{x:'0',y:'0',width:'100%',height:'100%',fill:'url(#gradient-white)'}),$('rect',{x:'0',y:'0',width:'100%',height:'100%',fill:'url(#gradient-black)'})])}else if(v=='VML'){slide=['<DIV style="position: relative; width: 100%; height: 100%">','<v:rect style="position: absolute; top: 0; left: 0; width: 100%; height: 100%" stroked="f" filled="t">','<v:fill type="gradient" method="none" angle="0" color="red" color2="red" colors="8519f fuchsia;.25 #8000ff;24903f #0040ff;.5 aqua;41287f #00ff40;.75 #0bed00;57671f yellow"></v:fill>','</v:rect>','</DIV>'].join('');picker=['<DIV style="position: relative; width: 100%; height: 100%">','<v:rect style="position: absolute; left: -1px; top: -1px; width: 101%; height: 101%" stroked="f" filled="t">','<v:fill type="gradient" method="none" angle="270" color="#FFFFFF" opacity="100%" color2="#CC9A81" o:opacity2="0%"></v:fill>','</v:rect>','<v:rect style="position: absolute; left: 0px; top: 0px; width: 100%; height: 101%" stroked="f" filled="t">','<v:fill type="gradient" method="none" angle="0" color="#000000" opacity="100%" color2="#CC9A81" o:opacity2="0%"></v:fill>','</v:rect>','</DIV>'].join('');if(!t.namespaces['v'])t.namespaces.add('v','urn:schemas-microsoft-com:vml','#default#VML')}function hsv2rgb(a){var R,G,B,X,C;var h=(a.h%360)/60;C=a.v*a.s;X=C*(1-Math.abs(h%2-1));R=G=B=a.v-C;h=~~h;R+=[C,X,0,0,X,C][h];G+=[X,C,C,X,0,0][h];B+=[0,0,X,C,C,X][h];var r=Math.floor(R*255);var g=Math.floor(G*255);var b=Math.floor(B*255);return{r:r,g:g,b:b,hex:"#"+(16777216|b|(g<<8)|(r<<16)).toString(16).slice(1)}}function rgb2hsv(a){var r=a.r;var g=a.g;var b=a.b;if(a.r>1||a.g>1||a.b>1){r/=255;g/=255;b/=255}var H,S,V,C;V=Math.max(r,g,b);C=V-Math.min(r,g,b);H=(C==0?null:V==r?(g-b)/C+(g<b?6:0):V==g?(b-r)/C+2:(r-g)/C+4);H=(H%6)*60;S=C==0?0:C/V;return{h:H,s:S,v:V}}function slideListener(d,e,f){return function(a){a=a||s.event;var b=mousePosition(a);d.h=b.y/e.offsetHeight*360+hueOffset;d.s=d.v=1;var c=hsv2rgb({h:d.h,s:1,v:1});f.style.backgroundColor=c.hex;d.callback&&d.callback(c.hex,{h:d.h-hueOffset,s:d.s,v:d.v},{r:c.r,g:c.g,b:c.b},u,b)}};function pickerListener(d,e){return function(a){a=a||s.event;var b=mousePosition(a),width=e.offsetWidth,height=e.offsetHeight;d.s=b.x/width;d.v=(height-b.y)/height;var c=hsv2rgb(d);d.callback&&d.callback(c.hex,{h:d.h-hueOffset,s:d.s,v:d.v},{r:c.r,g:c.g,b:c.b},b)}};var x=0;function ColorPicker(f,g,h){if(!(this instanceof ColorPicker))return new ColorPicker(f,g,h);this.h=0;this.s=1;this.v=1;if(!h){var i=f;i.innerHTML=w;this.slideElement=i.getElementsByClassName('slide')[0];this.pickerElement=i.getElementsByClassName('picker')[0];var j=i.getElementsByClassName('slide-indicator')[0];var k=i.getElementsByClassName('picker-indicator')[0];ColorPicker.fixIndicators(j,k);this.callback=function(a,b,c,d,e){ColorPicker.positionIndicators(j,k,e,d);g(a,b,c)}}else{this.callback=h;this.pickerElement=g;this.slideElement=f}if(v=='SVG'){var l=slide.cloneNode(true);var m=picker.cloneNode(true);var n=l.getElementById('gradient-hsv');var o=l.getElementsByTagName('rect')[0];n.id='gradient-hsv-'+x;o.setAttribute('fill','url(#'+n.id+')');var p=[m.getElementById('gradient-black'),m.getElementById('gradient-white')];var q=m.getElementsByTagName('rect');p[0].id='gradient-black-'+x;p[1].id='gradient-white-'+x;q[0].setAttribute('fill','url(#'+p[1].id+')');q[1].setAttribute('fill','url(#'+p[0].id+')');this.slideElement.appendChild(l);this.pickerElement.appendChild(m);x++}else{this.slideElement.innerHTML=slide;this.pickerElement.innerHTML=picker}addEventListener(this.slideElement,'click',slideListener(this,this.slideElement,this.pickerElement));addEventListener(this.pickerElement,'click',pickerListener(this,this.pickerElement));enableDragging(this,this.slideElement,slideListener(this,this.slideElement,this.pickerElement));enableDragging(this,this.pickerElement,pickerListener(this,this.pickerElement))};function addEventListener(a,b,c){if(a.attachEvent){a.attachEvent('on'+b,c)}else if(a.addEventListener){a.addEventListener(b,c,false)}}function enableDragging(b,c,d){var e=false;addEventListener(c,'mousedown',function(a){e=true});addEventListener(c,'mouseup',function(a){e=false});addEventListener(c,'mouseout',function(a){e=false});addEventListener(c,'mousemove',function(a){if(e){d(a)}})}ColorPicker.hsv2rgb=function(a){var b=hsv2rgb(a);delete b.hex;return b};ColorPicker.hsv2hex=function(a){return hsv2rgb(a).hex};ColorPicker.rgb2hsv=rgb2hsv;ColorPicker.rgb2hex=function(a){return hsv2rgb(rgb2hsv(a)).hex};ColorPicker.hex2hsv=function(a){return rgb2hsv(ColorPicker.hex2rgb(a))};ColorPicker.hex2rgb=function(a){return{r:parseInt(a.substr(1,2),16),g:parseInt(a.substr(3,2),16),b:parseInt(a.substr(5,2),16)}};function setColor(a,b,d,e){a.h=b.h%360;a.s=b.s;a.v=b.v;var c=hsv2rgb(a);var f={y:(a.h*a.slideElement.offsetHeight)/360,x:0};var g=a.pickerElement.offsetHeight;var h={x:a.s*a.pickerElement.offsetWidth,y:g-a.v*g};a.pickerElement.style.backgroundColor=hsv2rgb({h:a.h,s:1,v:1}).hex;a.callback&&a.callback(e||c.hex,{h:a.h,s:a.s,v:a.v},d||{r:c.r,g:c.g,b:c.b},h,f);return a};ColorPicker.prototype.setHsv=function(a){return setColor(this,a)};ColorPicker.prototype.setRgb=function(a){return setColor(this,rgb2hsv(a),a)};ColorPicker.prototype.setHex=function(a){return setColor(this,ColorPicker.hex2hsv(a),u,a)};ColorPicker.positionIndicators=function(a,b,c,d){if(c){b.style.left='auto';b.style.right='0px';b.style.top='0px';a.style.top=(c.y-a.offsetHeight/2)+'px'}if(d){b.style.top=(d.y-b.offsetHeight/2)+'px';b.style.left=(d.x-b.offsetWidth/2)+'px'}};ColorPicker.fixIndicators=function(a,b){b.style.pointerEvents='none';a.style.pointerEvents='none'};s.ColorPicker=ColorPicker})(window,window.document);
+        </script>
 
 		<script>
-        var Hex;
+            var Hex;
 			var construct = true;
 			var Output = [];
 			var Get = "";
             var request;
 
-            var I2CSlave_Led = 2;
             var PinLed = [
-                  // R   G   B
+                // I2C Address 0x00
+                [],
+
+                // I2C Address 0x01
+                [
+                    [43,44,45]
+                ],
+
+                // I2C Address 0x02
+                [
                     [2,  3,  4],
                     [5,  6,  7],
                     [8,  9,  10],
-                    [11, 12, 13],
-                    [14, 15, 16]
+                    [11, 12, 13]
+                ]
+
             ];
             var Led = new Array();
+
+            var ParamText = [
+                // Blank
+                [],
+
+                // Master
+                ['PWR_ON', 'CP_TMR'],
+
+                // Led Slave
+                ['PWR_ON']
+            ];
 
 			function GetArduinoIO()		{
 				nocache = "n=" + Math.floor(Math.random() * 100000);
@@ -60,7 +82,7 @@
 								// Construct or refresh analog pins
 								for (var i = 0;  i < AnalogXML.length; i++) {
 									var pin     = parseInt(AnalogXML[i].getAttribute("pin"));
-                                    var i2cAddr = parseInt(AnalogXML[i].getAttribute("i2c")).toString(16);
+                                    var i2cAddr = parseInt(AnalogXML[i].getAttribute("i2c")).toString(16).toUpperCase();
 									var value   = AnalogXML[i].childNodes[0].nodeValue;
 
 									if (construct) {
@@ -81,7 +103,7 @@
 								// Construct or refresh input pins
 								for (var i = 0;  i < InputXML.length; i++) {
 									var pin     = parseInt(InputXML[i].getAttribute("pin"));
-                                    var i2cAddr = parseInt(InputXML[i].getAttribute("i2c")).toString(16);
+                                    var i2cAddr = parseInt(InputXML[i].getAttribute("i2c")).toString(16).toUpperCase();
 									var value   = InputXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
 
 									if (construct) {
@@ -103,7 +125,7 @@
                                 // Construct or refresh output pins
                                 for (var i = 0;  i < OutputXML.length; i++) {
                                     var pin     = parseInt(OutputXML[i].getAttribute("pin"));
-                                    var i2cAddr = parseInt(OutputXML[i].getAttribute("i2c")).toString(16);
+                                    var i2cAddr = parseInt(OutputXML[i].getAttribute("i2c")).toString(16).toUpperCase();
                                     var value   = OutputXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
 
                                     if (construct)
@@ -121,57 +143,13 @@
                                 }
 
 
-                                /*if (construct) {
-                                    for (var i = 0;  i < PwmXML.length; i++) {
-                                        var pin     = parseInt(PwmXML[i].getAttribute("pin"));
-                                        var i2cAddr = parseInt(PwmXML[i].getAttribute("i2c")).toString(16);
-
-                                        if (i2cAddr == I2CSlave_Led) {
-                                            for (var j= 0; j<PinLed.length; j++)
-                                                if (PinLed[j].indexOf(pin) != -1)
-                                                    Led[j][PinLed[j].indexOf(Pin)] = true;
-                                        }
-
-                                    }
-
-                                    for (var i=0; i < Led.length; i++) {
-                                        var Complete = true;
-                                        if (Led[i].indexOf(false) == -1)
-                                            Complete = false;
-
-                                        Led[i].length = 0;
-                                        Led[i] = Complete;
-
-                                        if (Led[i]) {
-                                            document.getElementById("led").innerHTML +=
-                                                    "<div id='led_" + i2cAddr + "_" + i + "' " +
-                                                    "onclick=\"Led('" + i2cAddr + "', '" + i + "')\" >" +
-                                                    "Led " + i +
-                                                    "</div>";
-                                        }
-                                    }
-                                }
-                                else {
-
-                                }
-                                */
 
                                 // Construct or refresh PWM pins
                                 for (var i = 0;  i < PwmXML.length; i++) {
                                     var pin     = parseInt(PwmXML[i].getAttribute("pin"));
-                                    var i2cAddr = parseInt(PwmXML[i].getAttribute("i2c")).toString(16);
+                                    var i2cAddr = parseInt(PwmXML[i].getAttribute("i2c")).toString(16).toUpperCase();
                                     var value   = parseInt(PwmXML[i].childNodes[0].nodeValue).toString(16).toUpperCase();
                                         if (value.length < 2) value = "0"+value;
-
-                                    /*
-                                    if (i2cAddr)  {
-                                        for (var i=0; i< PinLed.length)
-                                            if (PinLed.indexOf(pin) != -1)
-                                                if (Led[i] == true)
-                                                    continue;
-                                    }
-                                    */
-
 
                                     if (construct) {
                                         document.getElementById("pwm").innerHTML +=
@@ -188,22 +166,69 @@
                                     document.getElementById("pwm_style_" + i2cAddr + "_" + pin).setAttribute("class", value);
                                 }
 
+                                // Construct or refresh LED pins. Loop for each Address
+                                for (var i = 0;  i < PinLed.length; i++) {
 
+                                    // Shortcut for long Array
+                                    var LedGroup = PinLed[i];
+
+                                    // Check if there RGB Groups in Address
+                                    if (LedGroup.length > 0) {
+
+                                        // Loop for each RGB group
+                                        for (var Group = 0; Group < LedGroup.length; Group++) {
+                                            // I2C Address
+                                            var i2cAddr = i.toString(16);
+                                            // Pin values
+                                            var RedPin     = LedGroup[Group][0];
+                                            var GreenPin   = LedGroup[Group][1];
+                                            var BluePin    = LedGroup[Group][2];
+
+                                            // Pin Objects
+                                            var RedObj     = document.getElementById("pwm_"+i2cAddr+"_"+RedPin);
+                                            var GreenObj   = document.getElementById("pwm_"+i2cAddr+"_"+GreenPin);
+                                            var BlueObj    = document.getElementById("pwm_"+i2cAddr+"_"+BluePin);
+
+                                            // Check if the pin exists
+                                            if (RedObj && GreenObj && BlueObj ) {
+                                                var Red     = RedObj.innerHTML.substr(2,2);
+                                                var Green   = GreenObj.innerHTML.substr(2,2);
+                                                var Blue    = BlueObj.innerHTML.substr(2,2);
+
+                                                if (construct) {
+                                                    document.getElementById("led").innerHTML +=
+                                                            "<div id='led_" + i2cAddr + "_" + Group + "' " +
+                                                                    "onclick=\"SetLed('" + i2cAddr + "', '" + RedPin + "', '" + GreenPin + "', '" + BluePin + "')\" >" +
+                                                                    "Led " + i2cAddr+"."+Group +
+                                                                    "</div>";
+                                                }
+                                                else {
+                                                    document.getElementById("led_"+i2cAddr+"_"+Group).style.backgroundColor = '#'+Red+Green+Blue;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
 
                                 // Construct or refresh parameters
                                 for (var i = 0;  i < ParamXML.length; i++) {
                                     var id      = parseInt(ParamXML[i].getAttribute("id"));
-                                    var i2cAddr = parseInt(ParamXML[i].getAttribute("i2c")).toString(16);
-                                    var txt     = ParamXML[i].getAttribute("txt");
+                                    var i2cAddr = parseInt(ParamXML[i].getAttribute("i2c")).toString(16).toUpperCase();
+                                    // For the text array
+                                    var int_i2cAddr = parseInt(ParamXML[i].getAttribute("i2c"));
                                     var value   = ParamXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
 
                                     if (construct)
                                         document.getElementById("param").innerHTML +=
                                                 "<div id='param_style_" + i2cAddr + "_" + id + "' " +
                                                 "onclick=\"SendReq('" + i2cAddr + "', 'P', '" + id + "')\" >" +
-                                                i2cAddr + "." + id + " <span class='txt'>(" + txt + ")</span>: " +
+                                                i2cAddr + "." + id + " <span class='txt'>NA</span>: " +
                                                 "<span class='param' id='param_" + i2cAddr + "_" + id + "'>"
                                                 + value + "</span></div>";
+
+                                        // Set the param Name
+                                        if (!(typeof ParamText[int_i2cAddr] === 'undefined') && !(typeof ParamText[int_i2cAddr][id] === 'undefined'))
+                                            document.getElementById("param_style_" + i2cAddr + "_" + id).getElementsByClassName("txt")[0].innerHTML = ParamText[int_i2cAddr][id];
 
                                     else
                                         document.getElementById("param_" + i2cAddr + "_" + id).innerHTML = value;
@@ -231,7 +256,7 @@
 				Get = "";
 				Output.length = 0;
 
-				setTimeout('GetArduinoIO()', 2500);
+				setTimeout('GetArduinoIO()', 700);
             }
 
             function SendReq(i2cAddr, action, pin )		{
@@ -270,8 +295,7 @@
                 Output.push( i2cAddr + action + Pin + Value +"&");
             }
 
-            function SetLed(i2cAddr, id) {
-                id = parseInt(id);
+            function SetLed(i2cAddr, RedPin, GreenPin, BluePin) {
 
                 var RGB = Hex.toString(16);
 
@@ -279,11 +303,16 @@
                 var Green   = RGB.substr(3,2);
                 var Blue    = RGB.substr(5,2);
 
-                var RedPin      = parseInt(PinLed[id][0]).toString(16);
+                i2cAddr = parseInt(i2cAddr).toString(16);
+                    if (i2cAddr.length < 2) i2cAddr = "0" + i2cAddr;
+
+                RedPin = parseInt(RedPin).toString(16);
                     if (RedPin.length < 2) RedPin = "0" + RedPin;
-                var GreenPin    = parseInt(PinLed[id][1]).toString(16);
+
+                GreenPin = parseInt(GreenPin).toString(16);
                     if (GreenPin.length < 2) GreenPin = "0"+GreenPin;
-                var BluePin     = parseInt(PinLed[id][2]).toString(16);
+
+                BluePin = parseInt(BluePin).toString(16);
                     if (BluePin.length < 2) BluePin = "0"+BluePin;
 
                 Output.push( i2cAddr + 'L' + RedPin     + Red       +"&");
@@ -417,11 +446,6 @@
         <div class="IO_box">
             <h2>Led RGB</h2>
             <div id="led" >
-                <div id="led_2_1" onclick="SetLed('02', '0');" >Led 1</div>
-                <div id="led_2_2" onclick="SetLed('02', '1');" >Led 2</div>
-                <div id="led_2_3" onclick="SetLed('02', '2');" >Led 3</div>
-                <div id="led_2_4" onclick="SetLed('02', '3');" >Led 4</div>
-                <div id="led_2_5" onclick="SetLed('02', '4');" >Led 5</div>
             </div>
         </div>
 
