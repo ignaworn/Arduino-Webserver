@@ -32,7 +32,7 @@ const   byte     SizeParameter    = 1;
 // Debug messages
 const   boolean  debug            = false;
 // Store and read Parameters from EEPROM
-const   boolean  UseEEPROM        = true;
+const   boolean  UseEEPROM        = false;
 // Disable Arduino TWI Internal Resistor (true to disable) Only in ATmega328P
 const   boolean  TWI_IntResistor  = true;
 
@@ -81,6 +81,7 @@ void setup() {
 
 void loop() {
     delay(5000);
+    
     UpdateParameters(true);
 }
 
