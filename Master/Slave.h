@@ -1,14 +1,13 @@
 class Slave {
   private:
-    byte _Address;
-    bool _Status;
-    bool _Setup;
 
     void TestConnection();
     void PinData();
-    void GetData(byte Size, byte Page, byte Pin[], byte Value[]);
     void GetPage(byte Page, byte ReqSize, byte Store[]);
      
+    byte _Address;
+    bool _Status;
+    bool _Setup;
     byte SizeParameters, SizeAnalogs, SizeInputs, SizeOutputs, SizePWM;
     byte Parameters[32], ANALOGS[32], INPUTS[32], OUTPUTS[32], PWM[32]; 
     byte _Parameters[32], _ANALOGS[32], _INPUTS[32], _OUTPUTS[32], _PWM[32];
@@ -19,11 +18,14 @@ class Slave {
     void Setup();
     byte Address();
     bool Status();
+    
     void SendData(int Mode, byte Pin, byte Value);
     
     byte Size(char Type);
-    byte Data(char Type, byte ID);
+    byte Value(char Type, byte ID);
     byte ID(char Type, byte ID);
+    
+    
 };
 
 
@@ -47,7 +49,7 @@ byte Slave::Size(char Type) {
     case 'L':         return SizePWM; break;
   }  
 }
-byte Slave::Data(char Type, byte ID) {
+byte Slave::Value(char Type, byte ID) {
   switch(Type) {
     case 'P':   return _Parameters[ID]; break;
     case 'I':       return _INPUTS[ID]; break;
@@ -98,6 +100,10 @@ void Slave::TestConnection() {
 
 
 void Slave::GetPage(byte Page, byte ReqSize, byte Store[]) {
+    // Dont call if there is nothing to show
+    if (ReqSize == 0)
+      return;
+      
     // Start I2C Communication with Slave
     Wire.beginTransmission(_Address);
 
@@ -113,6 +119,11 @@ void Slave::GetPage(byte Page, byte ReqSize, byte Store[]) {
     // Store response in a byte array
     for (int i=0; i<ReqSize; i++)
       Store[i] = Wire.read();
+    
+    Serial.begin(115200);
+    for (int i=0; i<ReqSize; i++) 
+      Serial.println(Store[i]);
+    Serial.end();
 }
 
 
@@ -128,33 +139,33 @@ void Slave::PinData() {
     SizeOutputs    = PinData[2];
     SizePWM        = PinData[3];
     SizeParameters = PinData[4];
+    
+    // Retreive Pin Numbers
+    GetPage(0x01, SizeAnalogs, ANALOGS);
+    GetPage(0x03, SizeInputs, INPUTS);
+    GetPage(0x05, SizeOutputs, OUTPUTS);
+    GetPage(0x07, SizePWM, PWM);
+    GetPage(0x09, SizeParameters, Parameters);
 }
 
 
 void Slave::Update() {
     // Update Analog values
-    GetData(SizeAnalogs,   0x01, ANALOGS, _ANALOGS);
+    GetPage(0x02, SizeAnalogs, _ANALOGS);
+    
     // Update Inputs values
-    GetData(SizeInputs,    0x03, INPUTS, _INPUTS);
+    GetPage(0x04, SizeInputs, _INPUTS);
+    
     // Update Outputs values
-    GetData(SizeOutputs,   0x05, OUTPUTS, _OUTPUTS);
+    GetPage(0x06, SizeOutputs, _OUTPUTS);
+    
     // Update PWM values
-    GetData(SizePWM,       0x07, PWM, _PWM);
+    GetPage(0x08, SizePWM, _PWM);
+    
     // Update Parameters values
-    GetData(SizeParameters,0x09, Parameters, _Parameters);
+    GetPage(0x0A, SizeParameters, _Parameters);
 }
 
-void Slave::GetData(byte Size, byte Page, byte Pin[], byte Value[]) {
-    // Check if size is null
-    if (Size == 0)
-      return;
-
-    // Retreive Pin Numbers
-    GetPage(Page, Size, Pin);
-
-    // Retreive Pin Values
-    GetPage(Page+1, Size, Value);
-}
 
 void Slave::SendData(int Mode, byte Pin, byte Value) {
    // Begin I2C Communication
@@ -162,9 +173,9 @@ void Slave::SendData(int Mode, byte Pin, byte Value) {
    
    byte Type;
    switch(Mode) {
-     case 'P': Type = 0xA0;
-     case 'M': Type = 0xA1;
-     case 'L': Type = 0xA2;
+     case 'P': Type = 0xA0; break;
+     case 'M': Type = 0xA1; break;
+     case 'L': Type = 0xA2; break;
    }
    
    // Send the Mode
