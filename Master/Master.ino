@@ -51,9 +51,9 @@ EEPROM Parameters
 */
 
 // Streaming library by Mikal Hart: http://arduiniana.org/libraries/streaming/
-#include "Streaming.h"
+#include "libraries/Streaming.h"
 // SoftPWM library: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
-#include "SoftPWM.cpp"
+#include "libraries/SoftPWM.cpp"
 
 #include <EEPROM.h>
 
@@ -63,7 +63,7 @@ EEPROM Parameters
 
 #include <Wire.h>
 
-#include "Slave.h"
+#include "libraries/Slave.h"
 
 
 
