@@ -2,10 +2,15 @@
 //                   LED_RGB-slave
 // ---------------------------------------------------
 
-#include <Streaming.h>
+// Streaming library by Mikal Hart: http://arduiniana.org/libraries/streaming/
+#include "Streaming.h"
+// SoftPWM library: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
+#include "SoftPWM.cpp"
+
 #include <EEPROM.h>
-#include <SoftPWM.h>
+
 #include <Wire.h>
+
 
 // Arduino Master Adress
 const   byte     I2CMaster        = 1;
