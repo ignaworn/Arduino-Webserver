@@ -3,9 +3,10 @@
 // ---------------------------------------------------
 
 // Streaming library by Mikal Hart: http://arduiniana.org/libraries/streaming/
-#include "libraries/Streaming.h"
+#include "Streaming.h"
+
 // SoftPWM library: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
-#include "libraries/SoftPWM.cpp"
+#include "SoftPWM.h"
 
 #include <EEPROM.h>
 
