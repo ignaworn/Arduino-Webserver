@@ -1,6 +1,7 @@
 // ---------------------------------------------------
 //                   CONTROL PLACARD
 // ---------------------------------------------------
+
 #ifdef CONTROL_PLACARD
 
     // Sensor A - actual
@@ -11,15 +12,6 @@
 
     // Control Placard Timer
     unsigned long CPTimer           = 0;
-
-    // Control Placard Timeout (mseg)
-    const   long CPTimeout          = 300000;
-
-    // Control Placard Input
-    const   int CPI[2]              = {2,3};
-
-    // Control Placard Output
-    const   int CPO[2]              = {5,6};
 
     // Timer Active
     const   byte* CPTimer_Active = &Parameters[1];

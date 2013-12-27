@@ -79,4 +79,15 @@
         #define SIZE_PARAMETERS 1
     #endif
 
+
+    // Control Placard Settings
+    #ifdef CONTROL_PLACARD
+        // Control Placard Timeout (mseg)
+        const   long CPTimeout          = 300000;
+        // Control Placard Input Pins (A & B)
+        const   int CPI[2]              = {2,3};
+        // Control Placard Output Pins (A & B)
+        const   int CPO[2]              = {5,6};
+    #endif
+
 #endif
