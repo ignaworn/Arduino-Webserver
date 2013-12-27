@@ -219,7 +219,7 @@
                                     var int_i2cAddr = parseInt(ParamXML[i].getAttribute("i2c"));
                                     var value   = ParamXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
 
-                                    if (construct)
+                                    if (construct) {
                                         document.getElementById("param").innerHTML +=
                                                 "<div id='param_style_" + i2cAddr + "_" + id + "' " +
                                                 "onclick=\"SendReq('" + i2cAddr + "', 'P', '" + id + "')\" >" +
@@ -230,7 +230,7 @@
                                         // Set the param Name
                                         if (!(typeof ParamText[int_i2cAddr] === 'undefined') && !(typeof ParamText[int_i2cAddr][id] === 'undefined'))
                                             document.getElementById("param_style_" + i2cAddr + "_" + id).getElementsByClassName("txt")[0].innerHTML = ParamText[int_i2cAddr][id];
-
+                                    }
                                     else
                                         document.getElementById("param_" + i2cAddr + "_" + id).innerHTML = value;
 
