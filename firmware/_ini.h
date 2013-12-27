@@ -83,11 +83,15 @@
     // Control Placard Settings
     #ifdef CONTROL_PLACARD
         // Control Placard Timeout (mseg)
-        const   long CPTimeout          = 300000;
+        #define CONTROL_PLACARD_TIMEOUT 300000
+
         // Control Placard Input Pins (A & B)
-        const   int CPI[2]              = {2,3};
+        #define CONTROL_PLACARD_INPUT_PIN_A 2
+        #define CONTROL_PLACARD_INPUT_PIN_B 3
+
         // Control Placard Output Pins (A & B)
-        const   int CPO[2]              = {5,6};
+        #define CONTROL_PLACARD_OUTPUT_PIN_A 5
+        #define CONTROL_PLACARD_OUTPUT_PIN_B 6
     #endif
 
 #endif

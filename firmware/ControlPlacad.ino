@@ -13,6 +13,15 @@
     // Control Placard Timer
     unsigned long CPTimer           = 0;
 
+    // Control Placard Timeout (mseg)
+    const   long CPTimeout          = CONTROL_PLACARD_TIMEOUT;
+
+    // Control Placard Input Pins (A & B)
+    const   int CPI[2]              = {CONTROL_PLACARD_INPUT_PIN_A,CONTROL_PLACARD_INPUT_PIN_B};
+
+    // Control Placard Output Pins (A & B)
+    const   int CPO[2]              = {CONTROL_PLACARD_OUTPUT_PIN_A,CONTROL_PLACARD_OUTPUT_PIN_B};
+
     // Timer Active
     const   byte* CPTimer_Active = &Parameters[1];
 
