@@ -181,8 +181,11 @@ void setup() {
         if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << " ... ";
         Slave.Setup();
 
-        if (Slave.Status() )
+        if (Slave.Status() ) {
           if (debug) Serial << "Success" << endl;
+        }
+        else
+          if (debug) Serial << "Offline" << endl;
     #endif
 
     // Start Ethernet Connection and Start Server
