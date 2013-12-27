@@ -98,9 +98,9 @@ const   byte     SizeParameters = SIZE_PARAMETERS;
         byte     Parameters[SizeParameters];
 
 // Request Page, used by the Slave in functions RequestEvent & ReceiveEvent.
-
+#ifdef SLAVE
         byte     ReqPage;
-
+#endif
 
 // Define the debug var
 #ifdef DEBUG
