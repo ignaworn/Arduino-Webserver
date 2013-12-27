@@ -22,6 +22,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 *************************************************/
+#ifndef SOFTPWM_LIB
+#define SOFTPWM_LIB
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -292,3 +294,5 @@ void SoftPWMSetFadeTime(int8_t pin, uint16_t fadeUpTime, uint16_t fadeDownTime)
     }
   }
 }
+
+#endif
