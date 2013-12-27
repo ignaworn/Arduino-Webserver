@@ -19,6 +19,7 @@ Arduino-Webserver
                 - Ethernet library documentation: http://arduino.cc/en/Reference/Ethernet
                 - SoftPWM library documentation: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
                 - Streaming library documentation: http://arduiniana.org/libraries/streaming/
+                - FlexiColorPicker js library documentation: http://www.daviddurman.com/flexi-color-picker
 
  Fecha:         4 April 2013
  Modificado     26 December 2013
