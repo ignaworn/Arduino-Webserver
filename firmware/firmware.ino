@@ -26,7 +26,6 @@
  Autor:         I. Worn
  
  --------------------------------------------------------------
-Arduino MEGA Master. 
 
  A0: used by Ethernet shield
 
@@ -46,93 +45,75 @@ EEPROM Parameters
 0 - Byte - Set PWM Power (On/Off)
 1 - Byte - Set Timer Control Placard (On/Off)
 
- --------------------------------------------------------------
+ -------------------------------------------------------------- */
 
-*/
+
+// Include EEPROM Library
+#include <EEPROM.h>
+
+#include <Wire.h>
+
+
+#include "Slave.h"
+
+#include "_ini.h"
+
+
 
 // Streaming library by Mikal Hart: http://arduiniana.org/libraries/streaming/
 #include "Streaming.h"
 
 // SoftPWM library: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
-#include "SoftPWM.h"
+#ifdef PWM_CONTROL
+    #include "SoftPWM.h"
+#endif
 
-#include <EEPROM.h>
+// Define and include the Webserver Resources
+#ifdef WEBSERVER
+    // Include the libraries
+    #include <SPI.h>
+    #include <Ethernet.h>
 
-#include <SPI.h>
-
-#include <Ethernet.h>
-
-#include <Wire.h>
-
-#include "Slave.h"
-
-
-
-
-// Arduino Master Address
-const   byte     I2CMaster         = 0x01;
-
-// Arduino Slave_Led Address
-        Slave    Slave(0x02);
-
-// MAC address from Ethernet shield sticker under board
+    // MAC address from Ethernet shield sticker under board
         byte mac[6] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-        
-// IP address, may need to change depending on network
-        IPAddress ip(192, 168, 2, 40);        
-        
-// Create a server at port 80    
-        EthernetServer server(80);    
-        
-// Create the client
+    // IP address, may need to change depending on network
+        IPAddress ip(192, 168, 2, 40);
+    // Create a server at port 80
+        EthernetServer server(80);
+    // Create the client
         EthernetClient client;
-
-
-// Master I/O Pin declaration
-const   byte     ANALOGS[]          = {  A2, A3, A6, A7, A8 };//, A9, A10, A11, A12, A13, A14, A15 };
-
-const   byte     INPUTS[]           = {  2,3,5,7,8,9};//,14,15,16,17,18,19 };
-
-const   byte     OUTPUTS[]          = {  22,23,24,25,26,27};//,28,29,30,31,32,33,34,35,36,37,38,39 };
-
-const   byte     PWM[]             = {  40,41,42,43,44,45};//,46,47,48,49,50,51,52 };
-
+#endif
 
 // I/O counts
 const   byte     SizeAnalogs         = sizeof(ANALOGS)/sizeof(ANALOGS[0]);
-
 const   byte     SizeInputs          = sizeof(INPUTS)/sizeof(INPUTS[0]);
-
 const   byte     SizeOutputs         = sizeof(OUTPUTS)/sizeof(OUTPUTS[0]);
-
-const   byte     SizePWM            = sizeof(PWM)/sizeof(PWM[0]);
-
+const   byte     SizePWM             = sizeof(PWM)/sizeof(PWM[0]);
 
 // Output PWM Values
-        byte     _PWM[SizePWM]   = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};//, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-
-
-// Debug messages
-const   boolean  debug            = true;
-
-// Store and read Parameters from EEPROM
-const   boolean  UseEEPROM        = true;
-
-// Disable Arduino TWI Internal Resistor (true to disable) Only in ATmega328P
-const   boolean  TWI_IntResistor  = true;
-
+        byte     _PWM[SizePWM];
 
 // Parameters and EEPROM Parameters are stored in the array.
-const   byte     SizeParameters    = 2;
+const   byte     SizeParameters = SIZE_PARAMETERS;
+        byte     Parameters[SizeParameters];
 
-        byte     Parameters[SizeParameters] = {0};
+// Request Page, used by the Slave in functions RequestEvent & ReceiveEvent.
+
+        byte     ReqPage;
+
+
+// Define the debug var
+#ifdef DEBUG
+    const bool debug = true;
+#endif
+
 // ------------------------------------------------------------
 
 
 void setup() {
 
     // Start Serial communication
-    if(debug) Serial.begin(115200);
+    if(debug) Serial.begin(SERIAL_BAUD);
 
     if(debug) Serial << "Starting up..." << endl;
 
@@ -159,46 +140,66 @@ void setup() {
   
   
      // Read Params 
-    UpdateParameters();
+    UpdateParameters(false);
 
     // Start SoftPWM
-    SoftPWMBegin();
-    
-    // Set PWM Values
-    SetPower();
+    #ifdef PWM_CONTROL
+        SoftPWMBegin();
+
+        // Set PWM Values
+        SetPower();
+    #endif
     
 
-    // Start I2C Communication as Master
-    Wire.begin(I2CMaster);
+    // Start I2C Communication
+    Wire.begin(TWIAddr);
 
     // Set TWBR to 12kHz http://www.gammon.com.au/forum/?id=10896
     TWBR = 158;  
     TWSR |= _BV (TWPS0);
 
-    // Disable internal pull-up resistors. Only in Arduino Mega
-    if (TWI_IntResistor) {
-      #ifndef cbi
-        #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-      #endif
-      cbi(PORTC, 20);
-      cbi(PORTC, 21);
-    }
+    // Disable internal pull-up resistors.
+    #ifdef DISABLE_PULLUP
+        #ifndef cbi
+            #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+        #endif
+        #if defined(__AVR_ATmega2560__)
+            cbi(PORTC, 20);
+            cbi(PORTC, 21);
+        #endif
+        #if defined(__AVR_ATmega328P__)
+            cbi(PORTC, 4);
+            cbi(PORTC, 5);
+        #endif
+    #endif
     
     // Test I2C Communicatoin with LED SLAVE
     // And read the Pin I/O Status
     // Wait 1 sec to Startup
-    delay(1000);
-    if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << " ... "; 
-    Slave.Setup();
+    #ifdef SLAVE_LED
+        delay(1000);
+        if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << " ... ";
+        Slave.Setup();
 
-    if (Slave.Status() )
-      if (debug) Serial << "Success" << endl;
-      
-    // Start Ethernet Connection
-    Ethernet.begin(mac, ip);  
+        if (Slave.Status() )
+          if (debug) Serial << "Success" << endl;
+    #endif
 
-    // Start Server
-    server.begin();
+    // Start Ethernet Connection and Start Server
+    #ifdef WEBSERVER
+        Ethernet.begin(mac, ip);
+        server.begin();
+    #endif
+
+
+    // Define the Slave Interrupt Events
+    #ifdef SLAVE
+        // Start Request Event Interrupt
+        Wire.onRequest(RequestEvent);
+
+        // Start Receive Event Interrupt
+        Wire.onReceive(ReceiveEvent);
+    #endif
 
 
     if(debug) Serial << "Startup done" << endl << endl;
@@ -212,9 +213,16 @@ void setup() {
 
 void loop() {
     // Web Server
-    client = server.available();
-    if (client) WebServer();
-    
+    #ifdef WEBSERVER
+        client = server.available();
+        if (client) WebServer();
+    #endif
+
     // Control Placard
-    ControlPlacard();
+    #ifdef CONTROL_PLACARD
+        ControlPlacard();
+    #endif
+
+    // Store Parameters in EEPROM
+    UpdateParameters(true);
 }

@@ -48,30 +48,33 @@ void SetPWMPin (int Pin, byte Value ) {
 //             SET EEPROM PARAMETERS
 // ---------------------------------------------------
 
-void SetParameters(int ID, byte Value) {
-
+void SetParameters(int ID, byte Value, boolean noDelay) {
+    if (!noDelay)
     if (debug) Serial << "Changing parameter " << ID << " to value: " << Value;
-    
-    // If toggle, invert previous value
-    if (Value == 0x02)
-        Value = Parameters[ID] ? 0x00 : 0x01;
-        
+
+    // If toggle, invert value
+    if (Value == 2)
+      Value = Parameters[ID] ? 0x00 : 0x01;
+
     // Set the new parameter value
-    if (UseEEPROM) 
-      if (EEPROM.read(ID) != Value)
-        EEPROM.write(ID,Value);
-    
-    // Store the value in memory  
-    Parameters[ID] = Value;  
+    #ifdef USE_EEPROM
+        if (noDelay)
+          if (EEPROM.read(ID) != Value)
+            EEPROM.write(ID,Value);
+    #endif
+
+    // Store the value in the memory
+    Parameters[ID] = Value;
 
     // Check if the change was made succesfully
-    if ( UseEEPROM )
-      if (EEPROM.read(ID) == Value) 
-        if (debug) Serial << ", done successfully" << endl;    
-    
+    #ifdef USE_EEPROM
+      if (EEPROM.read(ID) == Value)
+        if (debug) Serial << ", done successfully" << endl;
+    #endif
+
     // Call setpower
     if (ID == 0)
-      SetPower(); 
+      SetPower();
 }
 
 
@@ -79,17 +82,22 @@ void SetParameters(int ID, byte Value) {
 //             UPDATE EEPROM PARAMETERS
 // ---------------------------------------------------
 
-void UpdateParameters() {
+void UpdateParameters(boolean Force) {
 
-    if (debug) Serial << "Updating Parameters" << endl;
+    #ifdef USE_EEPROM
+      if (debug) Serial << "Updating Parameters" << endl;
 
-    if (UseEEPROM)
       for (int i=0; i<SizeParameters; i++) {
-        Parameters[i] = EEPROM.read(i);
 
+        if (!Force)
+          Parameters[i] = EEPROM.read(i);
+        if (Force) {
+          SetParameters(i,Parameters[i], true);
+        }
         // Debug: Show params and values
-        if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameters[i] << endl;  
+        if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameters[i] << endl;
       }
+    #endif
 }
 
 

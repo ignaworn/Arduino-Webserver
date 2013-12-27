@@ -8,11 +8,11 @@ void RequestEvent() {
       
       // Create the buffer for sending multiple byte in a request event
       byte buf [5];
-      buf[0] = SizeAnalog;
+      buf[0] = SizeAnalogs;
       buf[1] = SizeInputs;
       buf[2] = SizeOutputs;
       buf[3] = SizePWM;     
-      buf[4] = SizeParameter;     
+      buf[4] = SizeParameters;
       
       // Send data
       Wire.write(buf, 5);       
@@ -24,9 +24,9 @@ void RequestEvent() {
     // ---------------------------------------------------
 
     else if ( ReqPage == 0x01 ) 
-        Wire.write(ANALOG, SizeAnalog);
+        Wire.write(ANALOGS, SizeAnalogs);
     else if ( ReqPage == 0x02 )
-        SendValue('a', SizeAnalog);
+        SendValue('a', SizeAnalogs);
       
     // ---------------------------------------------------
     //         ReqPage 3-4    INPUTS ID AND VALUE
@@ -59,9 +59,9 @@ void RequestEvent() {
     // ---------------------------------------------------
 
     else if ( ReqPage == 0x09 ) 
-        SendValue('P', SizeParameter);
+        SendValue('P', SizeParameters);
     else if ( ReqPage == 0x0A ) 
-        SendValue('p', SizeParameter);
+        SendValue('p', SizeParameters);
 
 }
 
@@ -80,12 +80,12 @@ void SendValue(char Type, byte Size) {
     // Send 16 PWM Values per page
     for (int i=0; i<Size; i++) {
       switch(Type) {
-          case 'a':            buf[i] = map(analogRead(ANALOG[i]),0,1023,0,100);   break;
+          case 'a':            buf[i] = map(analogRead(ANALOGS[i]),0,1023,0,100);   break;
           case 'i':            buf[i] = digitalRead(INPUTS[i]);   break;
           case 'o':            buf[i] = digitalRead(OUTPUTS[i]);   break;
           case 'l':            buf[i] = _PWM[i];   break;
           case 'P':            buf[i] = i;   break;
-          case 'p':            buf[i] = Parameter[i];  break;
+          case 'p':            buf[i] = Parameters[i];  break;
        }
     }
     
