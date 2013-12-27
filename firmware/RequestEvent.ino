@@ -1,3 +1,5 @@
+#ifdef SLAVE
+
 void RequestEvent() {
   
     // ---------------------------------------------------
@@ -92,3 +94,5 @@ void SendValue(char Type, byte Size) {
     // Send data
     Wire.write(buf, Size);  
 }
+
+#endif
