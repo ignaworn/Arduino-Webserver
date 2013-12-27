@@ -5,9 +5,9 @@
     //#define DEVICE 1
 
     // Automatic Device detection, since Arduino MEGA is Master and Arduino UNO is slave
-    #if defined(__AVR_ATmega32U4__)
+    #if defined(__AVR_ATmega328P__)
         #define DEVICE 2
-    #else
+    #elif defined(__AVR_ATmega2560__)
         #define DEVICE 1
     #endif
 
