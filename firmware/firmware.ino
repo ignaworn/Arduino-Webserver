@@ -184,7 +184,7 @@ void setup() {
     // Wait 1 sec to Startup
     #ifdef SLAVE_LED
         delay(1000);
-        if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << " ... ";
+        if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << ": ";
         Slave.Setup();
 
         if (Slave.Status() ) {

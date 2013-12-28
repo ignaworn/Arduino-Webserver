@@ -15,29 +15,29 @@
 //                GLOBAL CONFIGURATION
 //  ---------------------------------------------------
 
-    // Debug messages
+    // Debug messages ( comment to disable debug messages )
     #define DEBUG
 
     // Serial BAUD
     #define SERIAL_BAUD 115200
 
-    // Store and read Parameters from EEPROM
+    // Store and read Parameters from EEPROM ( comment to disable eeprom memory )
     #define USE_EEPROM
 
-    // Disable Arduino TWI Internal Pull-up Resistor (comment to enable)
+    // Disable Arduino TWI Internal Pull-up Resistor ( comment to enable pull-up resistors )
     #define DISABLE_PULLUP
 
 
 
 
 //  ---------------------------------------------------
-//                SPECIFIC CONFIGURATION
+//              DEVICE SPECIFIC CONFIGURATION
 //  ---------------------------------------------------
 
 
     // Configuration for device 1
     #if DEVICE == 1
-        // Define flags
+        // Define flags ( comment to disable )
         #define MASTER
         #define WEBSERVER
         #define CONTROL_PLACARD
@@ -59,9 +59,12 @@
         // Number of parameters used in this device
         #define SIZE_PARAMETERS 2
 
-        // Create objects for each Slave
+        // Enable Slave Led ( comment to disable )
         #define SLAVE_LED
-        Slave   Slave(0x02);
+        // Create the SlaveLed Object ( do not modify )
+        #ifdef SLAVE_LED
+            Slave   Slave(0x02);
+        #endif
 
     #endif
 
@@ -92,7 +95,11 @@
     #endif
 
 
-    // Control Placard Settings
+
+//  ---------------------------------------------------
+//              CONTROL PLACARD SETTINGS
+//  ---------------------------------------------------
+
     #ifdef CONTROL_PLACARD
         // Control Placard Timeout (mseg)
         #define CONTROL_PLACARD_TIMEOUT 300000
