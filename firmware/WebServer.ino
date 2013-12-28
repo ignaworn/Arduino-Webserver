@@ -1,17 +1,33 @@
 // ---------------------------------------------------
 //           WEB SERVER & CLIENT MANAGEMENT
 // ---------------------------------------------------
+#ifdef WEBSERVER
 
-// size of buffer used to capture HTTP requests
-const   int REQ_BUF_SZ = 48;
+    // size of buffer used to capture HTTP requests
+    const   int REQ_BUF_SZ = 48;
 
-// buffered HTTP request stored as null terminated string
-        char HTTP_req[REQ_BUF_SZ] = {0};
+    // buffered HTTP request stored as null terminated string
+            char HTTP_req[REQ_BUF_SZ] = {0};
 
-        // index into HTTP_req buffer
-        char req_index = 0;
+            // index into HTTP_req buffer
+            char req_index = 0;
+
+#endif
+
+
 
 void WebServer() {
+    // Don't run if Webserver is disabled
+    #ifndef WEBSERVER
+        return;
+    #endif
+
+    // Get active clients
+    client = server.available();
+
+    // Dont execute it if there is no client
+    if (!client)
+        return
 
     boolean currentLineIsBlank = true;
     boolean StartCheck = false;
@@ -26,9 +42,9 @@ void WebServer() {
             if ( StartCheck and (req_index < (REQ_BUF_SZ - 1) )  ) {
                 // Store the request in a buffer
                 HTTP_req[req_index] = c;
-            // The last character of the 8byte data
-            if (c == '&')
-                ParseReq();
+                // The last character of the 8byte data
+                if (c == '&')
+                    ParseReq();
                 // continue adding the index
                 req_index++;
             }
@@ -220,10 +236,10 @@ void ParseReq() {
             if (debug) Serial << "Changing Master Parameter State" << endl;
 
             // Set the new parameter value
-            SetParameters(Pin, Value, true);
+            SetParameters(Pin, Value);
 
-            // Update the Parameters value
-            UpdateParameters(false);
+            // Read the Parameters
+            ReadParameters();
             }
     }
 
