@@ -11,6 +11,10 @@
         #define DEVICE 1
     #endif
 
+//  ---------------------------------------------------
+//                GLOBAL CONFIGURATION
+//  ---------------------------------------------------
+
     // Debug messages
     #define DEBUG
 
@@ -18,10 +22,18 @@
     #define SERIAL_BAUD 115200
 
     // Store and read Parameters from EEPROM
-    //#define USE_EEPROM
+    #define USE_EEPROM
 
     // Disable Arduino TWI Internal Pull-up Resistor (comment to enable)
     #define DISABLE_PULLUP
+
+
+
+
+//  ---------------------------------------------------
+//                SPECIFIC CONFIGURATION
+//  ---------------------------------------------------
+
 
     // Configuration for device 1
     #if DEVICE == 1
