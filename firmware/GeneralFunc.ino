@@ -55,11 +55,11 @@ void SetPWMPin (int Pin, byte Value ) {
 
 void SetParameters(int ID, byte Value) {
 
-    if (debug) Serial << "Changing parameter " << ID << " to value: " << Value;
-
     // If toggle, invert value
     if (Value == 2)
       Value = Parameters[ID] ? 0x00 : 0x01;
+
+    if (debug) Serial << "Changing parameter " << ID << " to value: " << Value << endl;
 
     // Store the value in the memory
     Parameters[ID] = Value;
@@ -88,7 +88,7 @@ void ReadParameters() {
         return;
     #endif
 
-    if (debug) Serial << "Updating Parameters" << endl;
+    if (debug) Serial << "Reading parameters from EEPROM memory" << endl;
 
     for (int i=0; i<SizeParameters; i++) {
         // Debug: Show params and values
@@ -118,11 +118,11 @@ void StoreParameters() {
             // Store the buffered parameter in EEPROM memory
             EEPROM.write(EEPROM_buffer[i], Parameters[EEPROM_buffer[i]]);
 
+            // Debug: Show params and values
+            if (debug) Serial << "Parameter: "<< EEPROM_buffer[i] <<" - Value: " << Parameters[EEPROM_buffer[i]] << " saved."<< endl;
+
             // Clear the buffer
             EEPROM_buffer[i] = -1;
-
-            // Debug: Show params and values
-            if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameters[i] << " saved."<< endl;
         }
 
         // Set the cursor to zero
