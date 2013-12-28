@@ -237,10 +237,7 @@ void ParseReq() {
 
             // Set the new parameter value
             SetParameters(Pin, Value);
-
-            // Read the Parameters
-            ReadParameters();
-            }
+        }
     }
 
 
