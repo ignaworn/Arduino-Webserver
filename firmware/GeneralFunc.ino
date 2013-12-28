@@ -24,6 +24,11 @@ void SetPin (int Pin, boolean State ) {
 // ---------------------------------------------------
 
 void SetPWMPin (int Pin, byte Value ) {
+    // Don't run if SoftPWM is disabled
+    #ifndef PWM_CONTROL
+        return;
+    #endif
+
     int ID;
     for (int i=0; i<SizePWM; i++)
       if (PWM[i] == Pin)
@@ -48,28 +53,23 @@ void SetPWMPin (int Pin, byte Value ) {
 //             SET EEPROM PARAMETERS
 // ---------------------------------------------------
 
-void SetParameters(int ID, byte Value, boolean noDelay) {
-    if (!noDelay)
+void SetParameters(int ID, byte Value) {
+
     if (debug) Serial << "Changing parameter " << ID << " to value: " << Value;
 
     // If toggle, invert value
     if (Value == 2)
       Value = Parameters[ID] ? 0x00 : 0x01;
 
-    // Set the new parameter value
-    #ifdef USE_EEPROM
-        if (noDelay)
-          if (EEPROM.read(ID) != Value)
-            EEPROM.write(ID,Value);
-    #endif
-
     // Store the value in the memory
     Parameters[ID] = Value;
 
-    // Check if the change was made succesfully
+    // Store the ID in a buffer to store it in EEPROM memory
     #ifdef USE_EEPROM
-      if (EEPROM.read(ID) == Value)
-        if (debug) Serial << ", done successfully" << endl;
+        // Add a position in the cursor
+        EEPROM_cursor++;
+        // And store the ID
+        EEPROM_buffer[EEPROM_cursor] = ID;
     #endif
 
     // Call setpower
@@ -79,25 +79,55 @@ void SetParameters(int ID, byte Value, boolean noDelay) {
 
 
 // ---------------------------------------------------
-//             UPDATE EEPROM PARAMETERS
+//             READ PARAMETERS FROM EEPROM
 // ---------------------------------------------------
 
-void UpdateParameters(boolean Force) {
+void ReadParameters() {
+    // Don't run if EEPROM is disabled
+    #ifndef USE_EEPROM
+        return;
+    #endif
 
-    #ifdef USE_EEPROM
-      if (debug) Serial << "Updating Parameters" << endl;
+    if (debug) Serial << "Updating Parameters" << endl;
 
-      for (int i=0; i<SizeParameters; i++) {
-
-        if (!Force)
-          Parameters[i] = EEPROM.read(i);
-        if (Force) {
-          SetParameters(i,Parameters[i], true);
-        }
+    for (int i=0; i<SizeParameters; i++) {
         // Debug: Show params and values
         if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameters[i] << endl;
-      }
+
+        Parameters[i] = EEPROM.read(i);
+    }
+}
+
+
+
+// ---------------------------------------------------
+//             STORE PARAMETERS IN EEPROM
+// ---------------------------------------------------
+
+void StoreParameters() {
+    // Don't run if EEPROM is disabled
+    #ifndef USE_EEPROM
+        return;
     #endif
+
+    // Check if there is something in buffer
+    if (EEPROM_cursor > 0) {
+        if (debug) Serial << "Saving parameters in EEPROM memory" << endl;
+
+        for (int i = 1; i <= EEPROM_cursor; i++) {
+            // Store the buffered parameter in EEPROM memory
+            EEPROM.write(EEPROM_buffer[i], Parameters[EEPROM_buffer[i]]);
+
+            // Clear the buffer
+            EEPROM_buffer[i] = -1;
+
+            // Debug: Show params and values
+            if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameters[i] << " saved."<< endl;
+        }
+
+        // Set the cursor to zero
+        EEPROM_cursor = 0;
+    }
 }
 
 
@@ -114,20 +144,30 @@ void StrClear(char *str, char length) {
 // ---------------------------------------------------
 //                   SET POWER
 // ---------------------------------------------------
+
 boolean Power() {
-  if ( Parameters[0] )
-    return true;
-  else
-    return false;
+    // Don't run if SoftPWM is disabled
+    #ifndef PWM_CONTROL
+        return;
+    #endif
+
+    if ( Parameters[0] )
+        return true;
+    else
+        return false;
 }
 
 void SetPower() {
+    // Don't run if SoftPWM is disabled
+    #ifndef PWM_CONTROL
+        return;
+    #endif
+
     // Set Power Mode to the value sent
-    
     for (int i=0; i<SizePWM; i++) {
-        if ( Power() ) 
+        if ( Power() )
             SoftPWMSet(PWM[i], _PWM[i]);
-        else  
+        else
             SoftPWMSet(ALL, 0);
     }
 }

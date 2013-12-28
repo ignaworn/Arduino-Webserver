@@ -107,6 +107,12 @@ const   byte     SizeParameters = SIZE_PARAMETERS;
     const bool debug = true;
 #endif
 
+// Create the EEPROM buffer
+#ifdef USE_EEPROM
+    int EEPROM_buffer[5];
+    int EEPROM_cursor = 0;
+#endif
+
 // ------------------------------------------------------------
 
 
@@ -139,8 +145,8 @@ void setup() {
     }
   
   
-     // Read Params 
-    UpdateParameters(false);
+     // Read Params from EEPROM memory
+    ReadParameters();
 
     // Start SoftPWM
     #ifdef PWM_CONTROL
@@ -154,7 +160,7 @@ void setup() {
     // Start I2C Communication
     Wire.begin(TWIAddr);
 
-    // Set TWBR to 12kHz http://www.gammon.com.au/forum/?id=10896
+    // Set TWBR to 12kHz. Source ( http://www.gammon.com.au/forum/?id=10896 )
     TWBR = 158;  
     TWSR |= _BV (TWPS0);
 
@@ -216,16 +222,11 @@ void setup() {
 
 void loop() {
     // Web Server
-    #ifdef WEBSERVER
-        client = server.available();
-        if (client) WebServer();
-    #endif
+    WebServer();
 
     // Control Placard
-    #ifdef CONTROL_PLACARD
-        ControlPlacard();
-    #endif
+    ControlPlacard();
 
-    // Store Parameters in EEPROM
-    UpdateParameters(true);
+    // Store Modified Parameters in EEPROM
+    StoreParameters();
 }

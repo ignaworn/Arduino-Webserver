@@ -36,7 +36,7 @@
            byte Value = Wire.read();
 
            // Set Parameter
-           SetParameters(ID, Value, false);
+           SetParameters(ID, Value);
         }
 
 
