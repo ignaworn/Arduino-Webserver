@@ -27,7 +27,7 @@ void WebServer() {
 
     // Dont execute it if there is no client
     if (!client)
-        return
+        return;
 
     boolean currentLineIsBlank = true;
     boolean StartCheck = false;
