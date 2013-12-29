@@ -104,8 +104,8 @@ EEPROM Parameters
         byte NTP_buffer[ NTP_PACKET_SIZE];
         // A UDP instance to let us send and receive packets over UDP
         EthernetUDP Udp;
-        // Timezone correction from UTC (GMT+0)
-        const  long NTP_TimeZone = -10800L; // set this to the offset in seconds to your local time;
+        // Timezone correction from UTC (GMT+0) in seconds
+        const  long NTP_TimeZone = +10800L; // GMT-3 Buenos Aires
         // Interval between Time Re-Syncing
         const  int  NTP_sync_interval = 1800;
     #endif
