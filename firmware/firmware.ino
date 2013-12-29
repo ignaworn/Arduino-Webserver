@@ -48,8 +48,6 @@ EEPROM Parameters
  -------------------------------------------------------------- */
 
 
-// Include EEPROM Library
-#include <EEPROM.h>
 
 #include <Wire.h>
 

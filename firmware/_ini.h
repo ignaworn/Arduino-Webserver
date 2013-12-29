@@ -21,9 +21,6 @@
     // Serial BAUD
     #define SERIAL_BAUD 115200
 
-    // Store and read Parameters from EEPROM ( comment to disable eeprom memory )
-    #define USE_EEPROM
-
     // Disable Arduino TWI Internal Pull-up Resistor ( comment to enable pull-up resistors )
     #define DISABLE_PULLUP
 
@@ -42,6 +39,7 @@
         #define WEBSERVER   // Enable Webserver
         #define CONTROL_PLACARD // Enable Placard Control
         #define PWM_CONTROL // Enable PWM Control
+        #define USE_EEPROM // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
         // Define the IIC Address
         const   byte     TWIAddr = 0x01;
@@ -73,6 +71,7 @@
         #define RECEIVE_EVENT
         #define REQUEST_EVENT
         #define PWM_CONTROL // Enable PWM Control
+        #define USE_EEPROM // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
         // Define the IIC Address
         const   byte     TWIAddr = 0x02;
@@ -103,6 +102,15 @@
         #ifdef SLAVE_LED
             Slave   Slave(0x02);
         #endif
+    #endif
+
+
+//  ---------------------------------------------------
+//                  EEPROM CONTROL
+//  ---------------------------------------------------
+    // If EEPROM Flag is defined, include the library
+    #ifdef USE_EEPROM
+        #include <EEPROM.h>
     #endif
 
 //  ---------------------------------------------------
