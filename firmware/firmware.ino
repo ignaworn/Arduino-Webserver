@@ -91,7 +91,9 @@ EEPROM Parameters
 const   byte     SizeAnalogs         = sizeof(ANALOGS)/sizeof(ANALOGS[0]);
 const   byte     SizeInputs          = sizeof(INPUTS)/sizeof(INPUTS[0]);
 const   byte     SizeOutputs         = sizeof(OUTPUTS)/sizeof(OUTPUTS[0]);
-const   byte     SizePWM             = sizeof(PWM)/sizeof(PWM[0]);
+#ifdef PWM_CONTROL
+    const   byte     SizePWM             = sizeof(PWM)/sizeof(PWM[0]);
+#endif
 
 // Output PWM Values
         byte     _PWM[SizePWM];
