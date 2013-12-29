@@ -61,10 +61,7 @@
 
         // Enable Slave Led ( comment to disable )
         #define SLAVE_LED
-        // Create the SlaveLed Object ( do not modify )
-        #ifdef SLAVE_LED
-            Slave   Slave(0x02);
-        #endif
+
 
     #endif
 
@@ -95,6 +92,18 @@
     #endif
 
 
+//  ---------------------------------------------------
+//                  SLAVE CONTROL
+//  ---------------------------------------------------
+    // If MASTER Flag is defined, include the slave object class
+    #ifdef MASTER
+        #include "Slave.h"
+
+        // Create the SlaveLed Object ( do not modify )
+        #ifdef SLAVE_LED
+            Slave   Slave(0x02);
+        #endif
+    #endif
 
 //  ---------------------------------------------------
 //              CONTROL PLACARD SETTINGS
