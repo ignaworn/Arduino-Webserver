@@ -38,10 +38,10 @@
     // Configuration for device 1
     #if DEVICE == 1
         // Define flags ( comment to disable )
-        #define MASTER
-        #define WEBSERVER
-        #define CONTROL_PLACARD
-        #define PWM_CONTROL
+        #define MASTER  // Define device as Master. Enable I2C Communication
+        #define WEBSERVER   // Enable Webserver
+        #define CONTROL_PLACARD // Enable Placard Control
+        #define PWM_CONTROL // Enable PWM Control
 
         // Define the IIC Address
         const   byte     TWIAddr = 0x01;
@@ -69,10 +69,10 @@
     // Configuration for device 2
     #if DEVICE == 2
         // Define flags
-        #define SLAVE
+        #define SLAVE   // Define device as Slave. Enable I2C Communication
         #define RECEIVE_EVENT
         #define REQUEST_EVENT
-        #define PWM_CONTROL
+        #define PWM_CONTROL // Enable PWM Control
 
         // Define the IIC Address
         const   byte     TWIAddr = 0x02;
