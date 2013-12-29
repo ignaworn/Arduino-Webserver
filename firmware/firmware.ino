@@ -47,17 +47,18 @@ EEPROM Parameters
 
  -------------------------------------------------------------- */
 
-
-
-#include <Wire.h>
-
-
-
 #include "_ini.h"
 
-// If EEPROM Flag is defined, include the library
+
+
+// If EEPROM Flag is defined, include EEPROM Library
 #ifdef USE_EEPROM
     #include <EEPROM.h>
+#endif
+
+// If MASTER or SLAVE Flga is defined, include Wire Library
+#ifdef MASTER || SLAVE
+    #include <Wire.h>
 #endif
 
 // Streaming library by Mikal Hart: http://arduiniana.org/libraries/streaming/
@@ -67,6 +68,8 @@ EEPROM Parameters
 #ifdef PWM_CONTROL
     #include "SoftPWM.h"
 #endif
+
+
 
 // Define and include the Webserver Resources
 #ifdef WEBSERVER
@@ -157,12 +160,14 @@ void setup() {
     #endif
     
 
-    // Start I2C Communication
-    Wire.begin(TWIAddr);
+    // If MASTER or SLAVE Flag is defined, Start I2C Communication
+    #ifdef MASTER || SLAVE
+        Wire.begin(TWIAddr);
 
-    // Set TWBR to 12kHz. Source ( http://www.gammon.com.au/forum/?id=10896 )
-    TWBR = 158;  
-    TWSR |= _BV (TWPS0);
+        // Set TWBR to 12kHz. Source ( http://www.gammon.com.au/forum/?id=10896 )
+        TWBR = 158;
+        TWSR |= _BV (TWPS0);
+    #endif
 
     // Disable internal pull-up resistors.
     #ifdef DISABLE_PULLUP
