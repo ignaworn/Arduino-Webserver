@@ -7,6 +7,7 @@
         #include "WProgram.h"
     #endif
 
+    #include "Wire.h"
 
     class Slave {
 
