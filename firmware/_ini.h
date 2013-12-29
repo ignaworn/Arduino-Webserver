@@ -68,8 +68,6 @@
     #if DEVICE == 2
         // Define flags
         #define SLAVE   // Define device as Slave. Enable I2C Communication
-        #define RECEIVE_EVENT
-        #define REQUEST_EVENT
         #define PWM_CONTROL // Enable PWM Control
         #define USE_EEPROM // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
