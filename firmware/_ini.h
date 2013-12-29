@@ -1,6 +1,12 @@
 #ifndef INI_H
     #define INI_H
 
+    #if defined(ARDUINO) && ARDUINO >= 100
+        #include "Arduino.h"
+    #else
+        #include "WProgram.h"
+    #endif
+
     // Define the device ID
     //#define DEVICE 1
 
@@ -102,14 +108,6 @@
         #endif
     #endif
 
-
-//  ---------------------------------------------------
-//                  EEPROM CONTROL
-//  ---------------------------------------------------
-    // If EEPROM Flag is defined, include the library
-    #ifdef USE_EEPROM
-        #include <EEPROM.h>
-    #endif
 
 //  ---------------------------------------------------
 //              CONTROL PLACARD SETTINGS

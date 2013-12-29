@@ -55,7 +55,10 @@ EEPROM Parameters
 
 #include "_ini.h"
 
-
+// If EEPROM Flag is defined, include the library
+#ifdef USE_EEPROM
+    #include <EEPROM.h>
+#endif
 
 // Streaming library by Mikal Hart: http://arduiniana.org/libraries/streaming/
 #include "Streaming.h"
