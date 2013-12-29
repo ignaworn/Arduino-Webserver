@@ -42,7 +42,9 @@
     #if DEVICE == 1
         // Define flags ( comment to disable )
         #define MASTER  // Define device as Master. Enable I2C Communication
-        #define WEBSERVER   // Enable Webserver
+        #define ETHERNET // Enables Ethernet.
+            #define WEBSERVER   // Enable Webserver
+            #define NTP_TIME // Enable Network Time Protocol
         #define CONTROL_PLACARD // Enable Placard Control
         #define PWM_CONTROL // Enable PWM Control
         #define USE_EEPROM // Enable EEPROM Memory (Store and read Parameters from EEPROM)

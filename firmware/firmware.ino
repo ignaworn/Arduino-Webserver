@@ -71,20 +71,44 @@ EEPROM Parameters
 
 
 
-// Define and include the Webserver Resources
-#ifdef WEBSERVER
+// Initialize and setup Ethernet Connection
+#ifdef ETHERNET
     // Include the libraries
     #include <SPI.h>
     #include <Ethernet.h>
 
     // MAC address from Ethernet shield sticker under board
-        byte mac[6] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+    byte mac[6] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
     // IP address, may need to change depending on network
-        IPAddress ip(192, 168, 2, 40);
-    // Create a server at port 80
+    IPAddress ip(192, 168, 2, 40);
+
+    //  Start Webserver
+    #ifdef WEBSERVER
+        // Create a server at port 80
         EthernetServer server(80);
-    // Create the client
+        // Create the client
         EthernetClient client;
+    #endif
+
+    // Start NTP
+    #ifdef NTP_TIME
+        #include "Time.h"  // http://playground.arduino.cc/Code/Time
+        #include <EthernetUdp.h> // http://arduino.cc/en/Tutorial/UdpNtpClient
+        // Local port for UDP packets
+        unsigned int NTP_Port = 8888;
+        // NTP Server
+        IPAddress NTP_Server(66,60,22,202); // 0.ar.pool.ntp.org
+        // NTP time stamp is in the first 48 bytes of the message
+        const int NTP_PACKET_SIZE = 48;
+        // NTP Buffer to hold incoming packets
+        byte NTP_buffer[ NTP_PACKET_SIZE];
+        // A UDP instance to let us send and receive packets over UDP
+        EthernetUDP Udp;
+        // Timezone correction from UTC (GMT+0)
+        const  long NTP_TimeZone = -10800L; // set this to the offset in seconds to your local time;
+        // Interval between Time Re-Syncing
+        const  int  NTP_sync_interval = 1800;
+    #endif
 #endif
 
 // I/O counts
@@ -201,10 +225,32 @@ void setup() {
           if (debug) Serial << "Offline" << endl;
     #endif
 
-    // Start Ethernet Connection and Start Server
-    #ifdef WEBSERVER
+    // Start Ethernet Connection
+    #ifdef ETHERNET
         Ethernet.begin(mac, ip);
-        server.begin();
+
+        // Start WEBSERVER
+        #ifdef WEBSERVER
+            server.begin();
+        #endif
+
+        // Start NTP
+        #ifdef NTP_TIME
+            if (debug) Serial << "Syncing time via NTP: ";
+            Udp.begin(NTP_Port);
+            setSyncProvider(getNtpTime);
+            setSyncInterval(NTP_sync_interval);
+            long NTP_timeout = millis();
+
+             // wait until the time is set by the sync provider
+            while(timeStatus() == timeNotSet)
+                if (NTP_timeout + 10000 > millis()) {
+                    if (debug)  Serial << "Could not connect to NTP Server" << endl;
+                    break;
+                }
+            if (timeStatus() == timeSet)
+                if (debug) Serial << hour() << ":" << minute() << " - " << day() << "/" << month() << "/" << year() << endl;
+        #endif
     #endif
 
 
