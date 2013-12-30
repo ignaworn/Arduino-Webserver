@@ -134,6 +134,8 @@ const   byte     SizeParameters = SIZE_PARAMETERS;
 // Define the debug var
 #ifdef DEBUG
     const bool debug = true;
+#else
+    const bool debug = false;
 #endif
 
 // Create the EEPROM buffer
