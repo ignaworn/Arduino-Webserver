@@ -158,10 +158,10 @@ void SetPower() {
 // ---------------------------------------------------
 //                  NTP FUNCTIONS
 // ---------------------------------------------------
+// Do not load if NTP_TIME Flag is not active
+#ifdef NTP_TIME
+    unsigned long getNtpTime() {
 
-unsigned long getNtpTime() {
-    // Do not run if NTP_TIME Flag is not active
-    #ifdef NTP_TIME
         sendNTPpacket(NTP_Server); // send an NTP packet to a time server
 
         // wait to see if a reply is available
@@ -187,13 +187,10 @@ unsigned long getNtpTime() {
             return epoch - NTP_TimeZone;
         }
         return 0;
-    #endif
-}
+    }
 
-// send an NTP request to the time server at the given address
-unsigned long sendNTPpacket(IPAddress& address) {
-    // Do not run if NTP_TIME Flag is not active
-    #ifdef NTP_TIME
+    // send an NTP request to the time server at the given address
+    unsigned long sendNTPpacket(IPAddress& address) {
         // set all bytes in the buffer to 0
         memset(NTP_buffer, 0, NTP_PACKET_SIZE);
         // Initialize values needed to form NTP request
@@ -213,6 +210,5 @@ unsigned long sendNTPpacket(IPAddress& address) {
         Udp.beginPacket(address, 123); //NTP requests are to port 123
         Udp.write(NTP_buffer,NTP_PACKET_SIZE);
         Udp.endPacket();
-    #endif
-}
-
+    }
+#endif
