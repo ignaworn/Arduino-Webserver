@@ -1,4 +1,4 @@
-#ifdef NTP_TIMER
+#ifdef NTP_TIME
     // Everyday at 7:30am
     void MorningAlarm() {
         // Master Parameter 0 ON
