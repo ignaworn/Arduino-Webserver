@@ -187,46 +187,7 @@ void setup() {
         // Set PWM Values
         SetPower();
     #endif
-    
 
-    // If MASTER or SLAVE Flag is defined, Start I2C Communication
-    #ifdef MASTER || SLAVE
-        Wire.begin(TWIAddr);
-
-        // Set TWBR to 12kHz. Source ( http://www.gammon.com.au/forum/?id=10896 )
-        TWBR = 158;
-        TWSR |= _BV (TWPS0);
-
-        // Disable internal pull-up resistors.
-        #ifdef DISABLE_PULLUP
-            #ifndef cbi
-                #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-            #endif
-            #if defined(__AVR_ATmega2560__)
-                cbi(PORTC, 20);
-                cbi(PORTC, 21);
-            #endif
-            #if defined(__AVR_ATmega328P__)
-                cbi(PORTC, 4);
-                cbi(PORTC, 5);
-            #endif
-        #endif
-    #endif
-    
-    // Test I2C Communicatoin with LED SLAVE
-    // And read the Pin I/O Status
-    // Wait 1 sec to Startup
-    #ifdef SLAVE_LED
-        delay(1000);
-        if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << ": ";
-        Slave.Setup();
-
-        if (Slave.Status() ) {
-          if (debug) Serial << "Success" << endl;
-        }
-        else
-          if (debug) Serial << "Offline" << endl;
-    #endif
 
     // Start Ethernet Connection
     #ifdef ETHERNET
@@ -261,15 +222,50 @@ void setup() {
     #endif
 
 
-    // Define the Slave Interrupt Events
-    #ifdef SLAVE
-        // Start Request Event Interrupt
-        Wire.onRequest(RequestEvent);
+    // If MASTER or SLAVE Flag is defined, Start I2C Communication
+    #ifdef MASTER || SLAVE
+        Wire.begin(TWIAddr);
 
-        // Start Receive Event Interrupt
-        Wire.onReceive(ReceiveEvent);
+        // Set TWBR to 12kHz. Source ( http://www.gammon.com.au/forum/?id=10896 )
+        TWBR = 158;
+        TWSR |= _BV (TWPS0);
+
+        // Disable internal pull-up resistors.
+        #ifdef DISABLE_PULLUP
+            #ifndef cbi
+                #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+            #endif
+            #if defined(__AVR_ATmega2560__)
+                cbi(PORTC, 20);
+                cbi(PORTC, 21);
+            #endif
+            #if defined(__AVR_ATmega328P__)
+                cbi(PORTC, 4);
+                cbi(PORTC, 5);
+            #endif
+        #endif
+
+        // Setup confection with SLAVE_LED
+        #ifdef SLAVE_LED
+            if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << ": ";
+            Slave.Setup();
+
+            if (Slave.Status() ) {
+              if (debug) Serial << "Success" << endl;
+            }
+            else
+              if (debug) Serial << "Offline" << endl;
+        #endif
+
+        // Define the Slave Interrupt Events
+        #ifdef SLAVE
+            // Start Request Event Interrupt
+            Wire.onRequest(RequestEvent);
+
+            // Start Receive Event Interrupt
+            Wire.onReceive(ReceiveEvent);
+        #endif
     #endif
-
 
     if(debug) Serial << "Startup done" << endl << endl;
     
