@@ -190,7 +190,7 @@ void ParseReq() {
         byte  Pin    = strtol(pEnd, &pEnd, 0);
         byte  Value  = strtol(pEnd, &pEnd, 0);
 
-        if (debug) Serial << endl << "Parsing Request" << endl << "Address: " << Addr << " - Mode: " << char(Mode) << " - Pin: " << Pin << " - Value: " << Value << endl;
+        if (debug) Serial << endl << "New Request: Address: " << Addr << " - Mode: " << char(Mode) << " - Pin: " << Pin << " - Value: " << Value << endl;
 
 
 
@@ -201,13 +201,13 @@ void ParseReq() {
         // ------------------------------------------------------------------------
 
         if ( Addr == TWIAddr ) {
+            if (debug) Serial << "*Master ";
 
             // ---------------------------------------------------
             //           CHANGE MASTER OUTPUTS
             // ---------------------------------------------------
 
             if (Mode == 'M') {
-                if (debug) Serial << "Changing Master Output State" << endl;
 
                 // Set pin value
                 SetPin(Pin, Value);
@@ -220,7 +220,6 @@ void ParseReq() {
             // ---------------------------------------------------
             #ifdef PWM_CONTROL
                 else if (Mode == 'L') {
-                    if (debug) Serial << "Changing Master PWM State" << endl;
 
                     // Set pin value
                     SetPWMPin(Pin, Value);
@@ -233,7 +232,6 @@ void ParseReq() {
             // ---------------------------------------------------
 
             else if (Mode == 'P') {
-                if (debug) Serial << "Changing Master Parameter State" << endl;
 
                 // Set the new parameter value
                 SetParameters(Pin, Value);
@@ -252,11 +250,11 @@ void ParseReq() {
 
                 // Check if the Slave is connected
                 if (!Slave.Status() ) {
-                    if (debug) Serial << "Attempted to communicate with an offline I2C Slave #" << Addr << endl;
+                    if (debug) Serial << "*Attempted to communicate with an offline I2C Slave #" << Addr << endl;
                     return;
                 }
 
-                if (debug) Serial << "Sending instructions to: SLAVE #" << Addr << " ... ";
+                if (debug) Serial << "*Sending instructions to SLAVE #" << Addr << ": ";
 
                 // Send data to Slave
                 Slave.SendData( Mode, Pin, Value );
@@ -269,7 +267,7 @@ void ParseReq() {
         //              UNKNOWN SLAVE DEVICE
         // ---------------------------------------------------
         else {
-            if (debug) Serial << "Attempted to communicate with an unknown I2C Slave #" << Addr << endl;
+            if (debug) Serial << "*Attempted to communicate with an unknown I2C Slave #" << Addr << endl;
         }
     #endif
 }

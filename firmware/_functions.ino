@@ -59,7 +59,7 @@ void SetParameters(int ID, byte Value) {
     if (Value == 2)
       Value = Parameters[ID] ? 0x00 : 0x01;
 
-    if (debug) Serial << "Changing parameter " << ID << " to value: " << Value << endl;
+    if (debug) Serial << "Parameter: " << ID << " set to: " << Value << endl;
 
     // Store the value in the memory
     Parameters[ID] = Value;
