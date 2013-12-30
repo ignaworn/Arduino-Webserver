@@ -193,20 +193,20 @@ void setup() {
         // Set TWBR to 12kHz. Source ( http://www.gammon.com.au/forum/?id=10896 )
         TWBR = 158;
         TWSR |= _BV (TWPS0);
-    #endif
 
-    // Disable internal pull-up resistors.
-    #ifdef DISABLE_PULLUP
-        #ifndef cbi
-            #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-        #endif
-        #if defined(__AVR_ATmega2560__)
-            cbi(PORTC, 20);
-            cbi(PORTC, 21);
-        #endif
-        #if defined(__AVR_ATmega328P__)
-            cbi(PORTC, 4);
-            cbi(PORTC, 5);
+        // Disable internal pull-up resistors.
+        #ifdef DISABLE_PULLUP
+            #ifndef cbi
+                #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+            #endif
+            #if defined(__AVR_ATmega2560__)
+                cbi(PORTC, 20);
+                cbi(PORTC, 21);
+            #endif
+            #if defined(__AVR_ATmega328P__)
+                cbi(PORTC, 4);
+                cbi(PORTC, 5);
+            #endif
         #endif
     #endif
     
