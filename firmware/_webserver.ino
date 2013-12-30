@@ -268,4 +268,11 @@ void ParseReq() {
             if (debug) Serial << "Success" << endl;
         }
     #endif
+
+    // ---------------------------------------------------
+    //              UNKNOWN SLAVE DEVICE
+    // ---------------------------------------------------
+    else {
+        if (debug) Serial << "Attempted to communicate with an unknown I2C Slave #" << Addr << endl;
+    }
 }
