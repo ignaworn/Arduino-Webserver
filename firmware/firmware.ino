@@ -101,10 +101,8 @@ EEPROM Parameters
         unsigned int NTP_Port = 8888;
         // NTP Server
         IPAddress NTP_Server(66,60,22,202); // 0.ar.pool.ntp.org
-        // NTP time stamp is in the first 48 bytes of the message
-        const int NTP_PACKET_SIZE = 48;
         // NTP Buffer to hold incoming packets
-        byte NTP_buffer[ NTP_PACKET_SIZE];
+        byte NTP_buffer[ 48];
         // A UDP instance to let us send and receive packets over UDP
         EthernetUDP Udp;
         // Timezone correction from UTC (GMT+0) in seconds
