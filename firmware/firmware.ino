@@ -72,7 +72,7 @@ EEPROM Parameters
 
 
 // Initialize and setup Ethernet Connection
-#ifdef ETHERNET
+#ifdef USE_ETHERNET
     // Include the libraries
     #include <SPI.h>
     #include <Ethernet.h>
