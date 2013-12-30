@@ -62,11 +62,11 @@ EEPROM Parameters
 #endif
 
 // Streaming library by Mikal Hart: http://arduiniana.org/libraries/streaming/
-#include "Streaming.h"
+#include "lib_Streaming.h"
 
 // SoftPWM library: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
 #ifdef PWM_CONTROL
-    #include "SoftPWM.h"
+    #include "lib_SoftPWM.h"
 #endif
 
 
@@ -93,8 +93,8 @@ EEPROM Parameters
     // Start NTP
     #ifdef NTP_TIME
         // Timer library: http://playground.arduino.cc/Code/Time
-        #include "Time.h"
-        #include "TimeAlarms.h"
+        #include "lib_Time.h"
+        #include "lib_TimeAlarms.h"
 
         #include <EthernetUdp.h>
         // Local port for UDP packets

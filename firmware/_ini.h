@@ -99,7 +99,7 @@
 //  ---------------------------------------------------
     // If MASTER Flag is defined, include the slave object class
     #ifdef MASTER
-        #include "Slave.h"
+        #include "lib_Slave.h"
 
         // Create the SlaveLed Object ( do not modify )
         #ifdef SLAVE_LED

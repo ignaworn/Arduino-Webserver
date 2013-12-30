@@ -25,8 +25,8 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "SoftPWM.h"
-#include "SoftPWM_timer.h"
+#include "lib_SoftPWM.h"
+#include "lib_SoftPWM_timer.h"
 
 #if defined(WIRING)
  #include <Wiring.h>
