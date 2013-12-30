@@ -251,8 +251,13 @@ void setup() {
                     if (debug)  Serial << "Could not connect to NTP Server" << endl;
                     break;
                 }
-            if (timeStatus() == timeSet)
+            if (timeStatus() == timeSet) {
                 if (debug) Serial << hour() << ":" << minute() << " - " << day() << "/" << month() << "/" << year() << endl;
+
+                // Setup TimerAlarms (ONLY IF TIME WAS SE CORRECTLY)
+                Alarm.alarmRepeat(7,30,0, MorningAlarm);  // 7:30am every day
+                #include "_alarms.cpp"
+            }
         #endif
     #endif
 
