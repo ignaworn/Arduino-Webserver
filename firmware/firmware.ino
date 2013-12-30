@@ -256,7 +256,6 @@ void setup() {
 
                 // Setup TimerAlarms (ONLY IF TIME WAS SE CORRECTLY)
                 Alarm.alarmRepeat(7,30,0, MorningAlarm);  // 7:30am every day
-                #include "_alarms.cpp"
             }
         #endif
     #endif
