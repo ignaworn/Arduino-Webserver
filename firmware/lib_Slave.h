@@ -140,10 +140,6 @@
         for (int i=0; i<ReqSize; i++)
           Store[i] = Wire.read();
 
-        Serial.begin(115200);
-        for (int i=0; i<ReqSize; i++)
-          Serial.println(Store[i]);
-        Serial.end();
     }
 
     // Set the Slave Pin Data
