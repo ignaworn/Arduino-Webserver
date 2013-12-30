@@ -182,6 +182,7 @@ void ClientXML() {
 void ParseReq() {
     // Do not run if WEBSERVER Flag is not active
     #ifdef WEBSERVER
+
         char _data[14] = { '0', 'x' ,HTTP_req[req_index-7], HTTP_req[req_index-6], ' ', '0', 'x', HTTP_req[req_index-4], HTTP_req[req_index-3], ' ', '0', 'x', HTTP_req[req_index-2], HTTP_req[req_index-1] };
         char * pEnd;
 
@@ -191,70 +192,41 @@ void ParseReq() {
         byte  Value  = strtol(pEnd, &pEnd, 0);
 
         if (debug) Serial << endl << "New Request: Address: " << Addr << " - Mode: " << char(Mode) << " - Pin: " << Pin << " - Value: " << Value << endl;
+        if (debug) Serial << "*";
 
-
-
-        // ------------------------------------------------------------------------
-        //
-        //                         ARDUINO   MASTER
-        //
-        // ------------------------------------------------------------------------
-
+        // Arduino Master
         if ( Addr == TWIAddr ) {
-            if (debug) Serial << "*Master ";
+            // Add the header message
+            if (debug) Serial << "Master ";
 
-            // ---------------------------------------------------
-            //           CHANGE MASTER OUTPUTS
-            // ---------------------------------------------------
-
-            if (Mode == 'M') {
-
-                // Set pin value
+            // Change digital output
+            if (Mode == 'M')
                 SetPin(Pin, Value);
-            }
 
-
-
-            // ---------------------------------------------------
-            //           CHANGE MASTER PWM
-            // ---------------------------------------------------
+            // Change PWM output
             #ifdef PWM_CONTROL
-                else if (Mode == 'L') {
-
-                    // Set pin value
+                else if (Mode == 'L')
                     SetPWMPin(Pin, Value);
-                }
             #endif
 
-
-            // ---------------------------------------------------
-            //           CHANGE MASTER DIGITAL PARAMETERS
-            // ---------------------------------------------------
-
-            else if (Mode == 'P') {
-
-                // Set the new parameter value
+            // Change Parameter
+            else if (Mode == 'P')
                 SetParameters(Pin, Value);
-            }
         }
 
 
 
-        // ------------------------------------------------------------------------
-        //
-        //                         I2CSlave_LED
-        //
-        // ------------------------------------------------------------------------
+        // Slave LED
         #ifdef SLAVE_LED
             else if ( Addr == Slave.Address() ) {
 
                 // Check if the Slave is connected
                 if (!Slave.Status() ) {
-                    if (debug) Serial << "*Attempted to communicate with an offline I2C Slave #" << Addr << endl;
+                    if (debug) Serial << "Attempted to communicate with an offline I2C Slave #" << Addr << endl;
                     return;
                 }
 
-                if (debug) Serial << "*Sending instructions to SLAVE #" << Addr << ": ";
+                if (debug) Serial << "Sending instructions to SLAVE #" << Addr << ": ";
 
                 // Send data to Slave
                 Slave.SendData( Mode, Pin, Value );
@@ -263,11 +235,13 @@ void ParseReq() {
             }
         #endif
 
-        // ---------------------------------------------------
-        //              UNKNOWN SLAVE DEVICE
-        // ---------------------------------------------------
+
+
+        // Unknown Slave
         else {
-            if (debug) Serial << "*Attempted to communicate with an unknown I2C Slave #" << Addr << endl;
+            if (debug) Serial << "Attempted to communicate with an unknown I2C Slave #" << Addr << endl;
         }
+
+
     #endif
 }
