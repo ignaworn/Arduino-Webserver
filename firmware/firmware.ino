@@ -57,7 +57,7 @@ EEPROM Parameters
 #endif
 
 // If MASTER or SLAVE Flga is defined, include Wire Library
-#ifdef MASTER || SLAVE
+#if defined(MASTER) || defined(SLAVE)
     #include <Wire.h>
 #endif
 
@@ -118,12 +118,9 @@ EEPROM Parameters
 const   byte     SizeAnalogs         = sizeof(ANALOGS)/sizeof(ANALOGS[0]);
 const   byte     SizeInputs          = sizeof(INPUTS)/sizeof(INPUTS[0]);
 const   byte     SizeOutputs         = sizeof(OUTPUTS)/sizeof(OUTPUTS[0]);
-
-#ifdef PWM_CONTROL
-    const   byte     SizePWM             = sizeof(PWM)/sizeof(PWM[0]);
+const   byte     SizePWM             = sizeof(PWM)/sizeof(PWM[0]);
 // Output PWM Values
         byte     _PWM[SizePWM];
-#endif
 
 // Parameters and EEPROM Parameters are stored in the array.
 const   byte     SizeParameters = SIZE_PARAMETERS;
@@ -177,7 +174,7 @@ void setup() {
     }
   
   
-     // Read Params from EEPROM memory
+    // Read Params from EEPROM memory
     ReadParameters();
 
     // Start SoftPWM
@@ -190,7 +187,7 @@ void setup() {
 
 
     // Start Ethernet Connection
-    #ifdef ETHERNET
+    #ifdef USE_ETHERNET
         Ethernet.begin(mac, ip);
 
         // Start WEBSERVER
@@ -223,7 +220,7 @@ void setup() {
 
 
     // If MASTER or SLAVE Flag is defined, Start I2C Communication
-    #ifdef MASTER || SLAVE
+    #if defined(MASTER) || defined(SLAVE)
         Wire.begin(TWIAddr);
 
         // Set TWBR to 12kHz. Source ( http://www.gammon.com.au/forum/?id=10896 )
