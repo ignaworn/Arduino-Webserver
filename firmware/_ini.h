@@ -43,7 +43,7 @@
         // Define flags ( comment to disable )
         #define MASTER  // Define device as Master. Enable I2C Communication
             #define SLAVE_LED // Enable Slave Led
-        #define ETHERNET // Enables Ethernet.
+        #define USE_ETHERNET // Enables Ethernet.
             #define WEBSERVER   // Enable Webserver
             #define NTP_TIME // Enable Network Time Protocol
         #define CONTROL_PLACARD // Enable Placard Control
@@ -80,7 +80,7 @@
         const   byte     TWIAddr = 0x02;
 
         // I/O Pin declaration
-        const   byte     ANALOGS[]         = {};
+        const   byte     ANALOGS[]        = {};
         const   byte     INPUTS[]         = {};
         const   byte     OUTPUTS[]        = {A1, A2};
 
@@ -93,6 +93,9 @@
         #define SIZE_PARAMETERS 1
     #endif
 
+    #ifndef PWM_CONTROL
+        const byte PWM[] = {};
+    #endif
 
 //  ---------------------------------------------------
 //                  SLAVE CONTROL
