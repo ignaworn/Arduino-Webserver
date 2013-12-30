@@ -118,8 +118,10 @@ void ClientXML() {
         client << "<o i2c='" << TWIAddr << "' pin='" << OUTPUTS[i] << "'>" << digitalRead(OUTPUTS[i]) << "</o>" << endl;
 
     // Send Master PWM Pin
-    for (int i=0; i<SizePWM; i++)
-        client << "<l i2c='" << TWIAddr << "' pin='" << PWM[i] << "'>" << _PWM[i] << "</l>" << endl;
+    #ifdef PWM_CONTROL
+        for (int i=0; i<SizePWM; i++)
+            client << "<l i2c='" << TWIAddr << "' pin='" << PWM[i] << "'>" << _PWM[i] << "</l>" << endl;
+    #endif
 
     // Send Master Parameters
     for (int i=0; i<SizeParameters; i++)
@@ -154,9 +156,11 @@ void ClientXML() {
                     client << "<o i2c='" << Slave.Address() << "' pin='" << Slave.ID('O', i ) << "'>" << Slave.Value('O', i ) << "</o>" << endl;
 
             // Fetch I2CSlave_Led_PWM data
-            if (Slave.Size('L') > 0)
-                for (int i = 0; i < Slave.Size('L'); i++)
-                    client << "<l i2c='" << Slave.Address() << "' pin='" << Slave.ID('L', i ) << "'>" << Slave.Value('L', i ) << "</l>" << endl;
+            #ifdef PWM_CONTROL
+                if (Slave.Size('L') > 0)
+                    for (int i = 0; i < Slave.Size('L'); i++)
+                        client << "<l i2c='" << Slave.Address() << "' pin='" << Slave.ID('L', i ) << "'>" << Slave.Value('L', i ) << "</l>" << endl;
+            #endif
         }
     #endif
 
