@@ -1,3 +1,6 @@
+// Create PWM Power Pointer
+    const   byte* PWM_Power = &Parameters[0];
+
 // ---------------------------------------------------
 //                   SET DIGITAL PIN
 // ---------------------------------------------------
@@ -22,32 +25,29 @@ void SetPin (int Pin, boolean State ) {
 // ---------------------------------------------------
 //                   SET PWM PIN
 // ---------------------------------------------------
-
 void SetPWMPin (int Pin, byte Value ) {
-    // Don't run if SoftPWM is disabled
-    #ifndef PWM_CONTROL
-        return;
+    // Do not run if PWM_CONTROL Flag is not active
+    #ifdef PWM_CONTROL
+
+        int ID;
+        for (int i=0; i<SizePWM; i++)
+          if (PWM[i] == Pin)
+            ID = i;
+
+        // Set Pin value if power mode is on
+        if ( *PWM_Power )
+          SoftPWMSet(PWM[ID], Value);
+
+        // Store the Value in Memory
+        _PWM[ID] = Value;
+
+        // Check if changed OK.
+        if ( _PWM[ID] != Value )
+          if (debug) Serial << "ERROR SET PWM PIN ";
+
+        if (debug)  Serial << "PWM: " << PWM[ID] << " set to: " << Value << endl;
     #endif
-
-    int ID;
-    for (int i=0; i<SizePWM; i++)
-      if (PWM[i] == Pin)
-        ID = i;
-        
-    // Set Pin value if power mode is on
-    if ( Power() )
-      SoftPWMSet(PWM[ID], Value);
-
-    // Store the Value in Memory
-    _PWM[ID] = Value;
-
-    // Check if changed OK.
-    if ( _PWM[ID] != Value )
-      if (debug) Serial << "ERROR SET PWM PIN ";
-
-    if (debug)  Serial << "PWM: " << PWM[ID] << " set to: " << Value << endl;
 }
-
 
 // ---------------------------------------------------
 //             SET EEPROM PARAMETERS
@@ -73,8 +73,10 @@ void SetParameters(int ID, byte Value) {
     #endif
 
     // Call setpower
-    if (ID == 0)
-      SetPower();
+    #ifdef PWM_CONTROL
+        if (ID == 0)
+          SetPower();
+    #endif
 }
 
 
@@ -83,21 +85,18 @@ void SetParameters(int ID, byte Value) {
 // ---------------------------------------------------
 
 void ReadParameters() {
-    // Don't run if EEPROM is disabled
-    #ifndef USE_EEPROM
-        return;
+    // Do not run if USE_EEPROM Flag is not active
+    #ifdef USE_EEPROM
+        if (debug) Serial << "Reading parameters from EEPROM memory" << endl;
+
+        for (int i=0; i<SizeParameters; i++) {
+            // Debug: Show params and values
+            if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameters[i] << endl;
+
+            Parameters[i] = EEPROM.read(i);
+        }
     #endif
-
-    if (debug) Serial << "Reading parameters from EEPROM memory" << endl;
-
-    for (int i=0; i<SizeParameters; i++) {
-        // Debug: Show params and values
-        if (debug) Serial << "Parameter: "<< i <<" - Value: " << Parameters[i] << endl;
-
-        Parameters[i] = EEPROM.read(i);
-    }
 }
-
 
 
 // ---------------------------------------------------
@@ -105,31 +104,28 @@ void ReadParameters() {
 // ---------------------------------------------------
 
 void StoreParameters() {
-    // Don't run if EEPROM is disabled
-    #ifndef USE_EEPROM
-        return;
-    #endif
+    // Do not run if USE_EEPROM Flag is not active
+    #ifdef USE_EEPROM
+        // Check if there is something in buffer
+        if (EEPROM_cursor > 0) {
+            if (debug) Serial << "Saving parameters in EEPROM memory" << endl;
 
-    // Check if there is something in buffer
-    if (EEPROM_cursor > 0) {
-        if (debug) Serial << "Saving parameters in EEPROM memory" << endl;
+            for (int i = 1; i <= EEPROM_cursor; i++) {
+                // Store the buffered parameter in EEPROM memory
+                EEPROM.write(EEPROM_buffer[i], Parameters[EEPROM_buffer[i]]);
 
-        for (int i = 1; i <= EEPROM_cursor; i++) {
-            // Store the buffered parameter in EEPROM memory
-            EEPROM.write(EEPROM_buffer[i], Parameters[EEPROM_buffer[i]]);
+                // Debug: Show params and values
+                if (debug) Serial << "Parameter: "<< EEPROM_buffer[i] <<" - Value: " << Parameters[EEPROM_buffer[i]] << " saved."<< endl;
 
-            // Debug: Show params and values
-            if (debug) Serial << "Parameter: "<< EEPROM_buffer[i] <<" - Value: " << Parameters[EEPROM_buffer[i]] << " saved."<< endl;
+                // Clear the buffer
+                EEPROM_buffer[i] = -1;
+            }
 
-            // Clear the buffer
-            EEPROM_buffer[i] = -1;
+            // Set the cursor to zero
+            EEPROM_cursor = 0;
         }
-
-        // Set the cursor to zero
-        EEPROM_cursor = 0;
-    }
+    #endif
 }
-
 
 // ---------------------------------------------------
 //                   STR CLEAR
@@ -145,33 +141,18 @@ void StrClear(char *str, char length) {
 //                   SET POWER
 // ---------------------------------------------------
 
-boolean Power() {
-    // Don't run if SoftPWM is disabled
-    #ifndef PWM_CONTROL
-        return;
-    #endif
-
-    if ( Parameters[0] )
-        return true;
-    else
-        return false;
-}
-
 void SetPower() {
-    // Don't run if SoftPWM is disabled
-    #ifndef PWM_CONTROL
-        return;
+    // Do not run if PWM_CONTROL Flag is not active
+    #ifdef PWM_CONTROL
+        // Set Power Mode to the value sent
+        for (int i=0; i<SizePWM; i++) {
+            if ( *PWM_Power )
+                SoftPWMSet(PWM[i], _PWM[i]);
+            else
+                SoftPWMSet(ALL, 0);
+        }
     #endif
-
-    // Set Power Mode to the value sent
-    for (int i=0; i<SizePWM; i++) {
-        if ( Power() )
-            SoftPWMSet(PWM[i], _PWM[i]);
-        else
-            SoftPWMSet(ALL, 0);
-    }
 }
-
 
 
 // ---------------------------------------------------
