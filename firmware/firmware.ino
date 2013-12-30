@@ -92,8 +92,11 @@ EEPROM Parameters
 
     // Start NTP
     #ifdef NTP_TIME
-        #include "Time.h"  // http://playground.arduino.cc/Code/Time
-        #include <EthernetUdp.h> // http://arduino.cc/en/Tutorial/UdpNtpClient
+        // Timer library: http://playground.arduino.cc/Code/Time
+        #include "Time.h"
+        #include "TimeAlarms.h"
+
+        #include <EthernetUdp.h>
         // Local port for UDP packets
         unsigned int NTP_Port = 8888;
         // NTP Server
