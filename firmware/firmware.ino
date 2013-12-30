@@ -285,6 +285,7 @@ void loop() {
 
     // Set the Alarm delay check
     #ifdef NTP_TIME
-        Alarm.delay(1);
+        if (timeStatus() == timeSet)
+            Alarm.delay(1);
     #endif
 }
