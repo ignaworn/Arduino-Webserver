@@ -282,4 +282,9 @@ void loop() {
 
     // Store Modified Parameters in EEPROM
     StoreParameters();
+
+    // Set the Alarm delay check
+    #ifdef NTP_TIME
+        Alarm.delay(1);
+    #endif
 }
