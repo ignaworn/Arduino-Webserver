@@ -48,7 +48,7 @@ EEPROM Parameters
  -------------------------------------------------------------- */
 
 #include "_ini.h"
-
+char foo; // Fix
 
 
 // If EEPROM Flag is defined, include EEPROM Library
