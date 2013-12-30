@@ -80,7 +80,7 @@
         const   byte     TWIAddr = 0x02;
 
         // I/O Pin declaration
-        const   byte     ANALOG[]         = {};
+        const   byte     ANALOGS[]         = {};
         const   byte     INPUTS[]         = {};
         const   byte     OUTPUTS[]        = {A1, A2};
 
