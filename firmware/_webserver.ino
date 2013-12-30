@@ -99,31 +99,31 @@ void ClientXML() {
                 << endl;
 
         // Send Data
-        client << "<?xml version = \"1.0\" ?>" << endl
-                << "<arduino>" << endl;
+        client << "<?xml version = \"1.0\" ?>"
+                << "<arduino>";
 
 
         // Send Master Analog Pin
         for (int i=0; i<SizeAnalogs; i++)
-            client << "<a i2c='" << TWIAddr << "' pin='" << ANALOGS[i] << "'>" << lowByte(map(analogRead(ANALOGS[i]),0,1023,0,100)) << "</a>" << endl;
+            client << "<a i2c='" << TWIAddr << "' pin='" << ANALOGS[i] << "'>" << lowByte(map(analogRead(ANALOGS[i]),0,1023,0,100)) << "</a>";
 
         // Send Master Input Pin
         for (int i=0; i<SizeInputs; i++)
-            client << "<i i2c='" << TWIAddr << "' pin='" << INPUTS[i] << "'>" << digitalRead(INPUTS[i]) << "</i>" << endl;
+            client << "<i i2c='" << TWIAddr << "' pin='" << INPUTS[i] << "'>" << digitalRead(INPUTS[i]) << "</i>";
 
         // Send Master Output Pin
         for (int i=0; i<SizeOutputs; i++)
-            client << "<o i2c='" << TWIAddr << "' pin='" << OUTPUTS[i] << "'>" << digitalRead(OUTPUTS[i]) << "</o>" << endl;
+            client << "<o i2c='" << TWIAddr << "' pin='" << OUTPUTS[i] << "'>" << digitalRead(OUTPUTS[i]) << "</o>";
 
         // Send Master PWM Pin
         #ifdef PWM_CONTROL
             for (int i=0; i<SizePWM; i++)
-                client << "<l i2c='" << TWIAddr << "' pin='" << PWM[i] << "'>" << _PWM[i] << "</l>" << endl;
+                client << "<l i2c='" << TWIAddr << "' pin='" << PWM[i] << "'>" << _PWM[i] << "</l>";
         #endif
 
         // Send Master Parameters
         for (int i=0; i<SizeParameters; i++)
-            client << "<p i2c='" << TWIAddr << "' id='" << i << "'>" << Parameters[i] << "</p>" << endl;
+            client << "<p i2c='" << TWIAddr << "' id='" << i << "'>" << Parameters[i] << "</p>";
 
 
         //If Slave is Online
@@ -136,34 +136,34 @@ void ClientXML() {
                 // Fetch I2CSlave_Led_Parameter data
                 if (Slave.Size('P') > 0)
                     for (int i=0; i < Slave.Size('P'); i++)
-                        client << "<p i2c='" << Slave.Address() << "' id='" << Slave.ID('P', i ) << "'>" << Slave.Value('P', i ) << "</p>" << endl;
+                        client << "<p i2c='" << Slave.Address() << "' id='" << Slave.ID('P', i ) << "'>" << Slave.Value('P', i ) << "</p>";
 
                 // Fetch I2CSlave_Led_Analog data
                 if (Slave.Size('A') > 0)
                     for (int i = 0; i < Slave.Size('A'); i++)
-                        client << "<a i2c='" << Slave.Address() << "' pin='" << Slave.ID('A', i ) << "'>" << Slave.Value('A', i ) << "</a>" << endl;
+                        client << "<a i2c='" << Slave.Address() << "' pin='" << Slave.ID('A', i ) << "'>" << Slave.Value('A', i ) << "</a>";
 
                 // Fetch I2CSlave_Led_Inputs data
                 if (Slave.Size('I') > 0)
                     for (int i = 0; i < Slave.Size('I'); i++)
-                        client << "<i i2c='" << Slave.Address() << "' pin='" << Slave.ID('I', i ) << "'>" << Slave.Value('I', i ) << "</i>" << endl;
+                        client << "<i i2c='" << Slave.Address() << "' pin='" << Slave.ID('I', i ) << "'>" << Slave.Value('I', i ) << "</i>";
 
                 // Fetch I2CSlave_Led_Outputs data
                 if (Slave.Size('O') > 0)
                     for (int i = 0; i < Slave.Size('O'); i++)
-                        client << "<o i2c='" << Slave.Address() << "' pin='" << Slave.ID('O', i ) << "'>" << Slave.Value('O', i ) << "</o>" << endl;
+                        client << "<o i2c='" << Slave.Address() << "' pin='" << Slave.ID('O', i ) << "'>" << Slave.Value('O', i ) << "</o>";
 
                 // Fetch I2CSlave_Led_PWM data
                 #ifdef PWM_CONTROL
                     if (Slave.Size('L') > 0)
                         for (int i = 0; i < Slave.Size('L'); i++)
-                            client << "<l i2c='" << Slave.Address() << "' pin='" << Slave.ID('L', i ) << "'>" << Slave.Value('L', i ) << "</l>" << endl;
+                            client << "<l i2c='" << Slave.Address() << "' pin='" << Slave.ID('L', i ) << "'>" << Slave.Value('L', i ) << "</l>";
                 #endif
             }
         #endif
 
         // Close XML Tag
-        client << "</arduino>" << endl;
+        client << "</arduino>";
     #endif
 
 }
