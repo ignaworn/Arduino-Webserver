@@ -19,8 +19,10 @@ Software:
 References:
 - WebServer example by David A. Mellis and modified by Tom Igoe
 - Ethernet library documentation: http://arduino.cc/en/Reference/Ethernet
+- EthernetUDP library documentation: http://arduino.cc/en/Tutorial/UdpNtpClient
 - SoftPWM library documentation: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
 - Streaming library documentation: http://arduiniana.org/libraries/streaming/
+- Timer library documentation: http://playground.arduino.cc/Code/Time
 - FlexiColorPicker js library documentation: http://www.daviddurman.com/flexi-color-picker
 
 Fecha:
