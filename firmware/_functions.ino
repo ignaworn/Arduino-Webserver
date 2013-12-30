@@ -162,7 +162,24 @@ void SetPower() {
 #ifdef NTP_TIME
     unsigned long getNtpTime() {
 
-        sendNTPpacket(NTP_Server); // send an NTP packet to a time server
+        memset(NTP_buffer, 0, NTP_PACKET_SIZE);
+        // Initialize values needed to form NTP request
+        // (see URL above for details on the packets)
+        NTP_buffer[0] = 0b11100011;   // LI, Version, Mode
+        NTP_buffer[1] = 0;     // Stratum, or type of clock
+        NTP_buffer[2] = 6;     // Polling Interval
+        NTP_buffer[3] = 0xEC;  // Peer Clock Precision
+        // 8 bytes of zero for Root Delay & Root Dispersion
+        NTP_buffer[12]  = 49;
+        NTP_buffer[13]  = 0x4E;
+        NTP_buffer[14]  = 49;
+        NTP_buffer[15]  = 52;
+
+        // all NTP fields have been given values, now
+        // you can send a packet requesting a timestamp:
+        Udp.beginPacket(NTP_Server, 123); //NTP requests are to port 123
+        Udp.write(NTP_buffer,NTP_PACKET_SIZE);
+        Udp.endPacket();
 
         // wait to see if a reply is available
         delay(1000);
@@ -189,26 +206,4 @@ void SetPower() {
         return 0;
     }
 
-    // send an NTP request to the time server at the given address
-    unsigned long sendNTPpacket(IPAddress& address) {
-        // set all bytes in the buffer to 0
-        memset(NTP_buffer, 0, NTP_PACKET_SIZE);
-        // Initialize values needed to form NTP request
-        // (see URL above for details on the packets)
-        NTP_buffer[0] = 0b11100011;   // LI, Version, Mode
-        NTP_buffer[1] = 0;     // Stratum, or type of clock
-        NTP_buffer[2] = 6;     // Polling Interval
-        NTP_buffer[3] = 0xEC;  // Peer Clock Precision
-        // 8 bytes of zero for Root Delay & Root Dispersion
-        NTP_buffer[12]  = 49;
-        NTP_buffer[13]  = 0x4E;
-        NTP_buffer[14]  = 49;
-        NTP_buffer[15]  = 52;
-
-        // all NTP fields have been given values, now
-        // you can send a packet requesting a timestamp:
-        Udp.beginPacket(address, 123); //NTP requests are to port 123
-        Udp.write(NTP_buffer,NTP_PACKET_SIZE);
-        Udp.endPacket();
-    }
 #endif
