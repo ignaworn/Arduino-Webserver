@@ -155,6 +155,14 @@ void setup() {
     if(debug) Serial << "Starting up..." << endl;
 
 
+    // Start Analog Inputs Pin
+    if (SizeAnalogs > 0) {
+      if (debug) Serial << "Analogs: ";
+      for (int i=0; i<SizeAnalogs; i++)
+          if (debug) Serial << ANALOGS[i] << " ";
+      if (debug) Serial << endl;
+    }
+
     // Start Digital Inputs Pin
     if (SizeInputs > 0) {
       if (debug) Serial << "Inputs: ";
@@ -165,7 +173,7 @@ void setup() {
       if (debug) Serial << endl;
     }
     
-    // Start Digital Output Pin
+    // Start Digital Outputs Pin
     if (SizeOutputs > 0) {
       if (debug) Serial << "Outputs: ";
       for (int i=0; i<SizeOutputs; i++) {
@@ -174,7 +182,14 @@ void setup() {
       }
       if (debug) Serial << endl;
     }
-  
+
+    // Start PWM Outputs Pin
+    if (SizePWM > 0) {
+      if (debug) Serial << "PWM: ";
+      for (int i=0; i<SizePWM; i++)
+          if (debug) Serial << PWM[i] << " ";
+      if (debug) Serial << endl;
+    }
   
     // Read Params from EEPROM memory
     ReadParameters();
