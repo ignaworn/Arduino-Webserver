@@ -4,7 +4,7 @@
 #ifdef WEBSERVER
 
     // size of buffer used to capture HTTP requests
-    const   int REQ_BUF_SZ = 48;
+    const   int REQ_BUF_SZ = 56;
 
     // buffered HTTP request stored as null terminated string
             char HTTP_req[REQ_BUF_SZ] = {0};
