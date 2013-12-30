@@ -21,14 +21,11 @@
 //                GLOBAL CONFIGURATION
 //  ---------------------------------------------------
 
-    // Debug messages ( comment to disable debug messages )
-    #define DEBUG
-
     // Serial BAUD
     #define SERIAL_BAUD 115200
 
     // Disable Arduino TWI Internal Pull-up Resistor ( comment to enable pull-up resistors )
-    #define DISABLE_PULLUP
+    //#define DISABLE_PULLUP
 
 
 
@@ -41,14 +38,17 @@
     // Configuration for device 1
     #if DEVICE == 1
         // Define flags ( comment to disable )
-        #define MASTER  // Define device as Master. Enable I2C Communication
-            #define SLAVE_LED // Enable Slave Led
-        #define USE_ETHERNET // Enables Ethernet.
-            #define WEBSERVER   // Enable Webserver
-            #define NTP_TIME // Enable Network Time Protocol
-        #define CONTROL_PLACARD // Enable Placard Control
-        #define PWM_CONTROL // Enable PWM Control
-        #define USE_EEPROM // Enable EEPROM Memory (Store and read Parameters from EEPROM)
+        // -----------------------------------
+        #define DEBUG               // Enable Debug messages
+        #define MASTER              // Define device as Master. Enable I2C Communication
+            #define SLAVE_LED       // Enable Slave Led
+        //#define SLAVE             // Define device as Slave. Enable I2C Communication
+        #define USE_ETHERNET        // Enables Ethernet.
+            #define WEBSERVER       // Enable Webserver
+            #define NTP_TIME        // Enable Network Time Protocol
+        #define CONTROL_PLACARD     // Enable Placard Control
+        #define PWM_CONTROL         // Enable PWM Control
+        #define USE_EEPROM          // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
         // Define the IIC Address
         const   byte     TWIAddr = 0x01;
@@ -71,10 +71,18 @@
 
     // Configuration for device 2
     #if DEVICE == 2
-        // Define flags
-        #define SLAVE   // Define device as Slave. Enable I2C Communication
-        #define PWM_CONTROL // Enable PWM Control
-        #define USE_EEPROM // Enable EEPROM Memory (Store and read Parameters from EEPROM)
+        // Define flags ( comment to disable )
+        // -----------------------------------
+        //#define DEBUG               // Enable Debug messages
+        //#define MASTER              // Define device as Master. Enable I2C Communication
+        //    #define SLAVE_LED       // Enable Slave Led
+        #define SLAVE                 // Define device as Slave. Enable I2C Communication
+        //#define USE_ETHERNET        // Enables Ethernet.
+        //    #define WEBSERVER       // Enable Webserver
+        //    #define NTP_TIME        // Enable Network Time Protocol
+        //#define CONTROL_PLACARD     // Enable Placard Control
+        #define PWM_CONTROL           // Enable PWM Control
+        #define USE_EEPROM            // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
         // Define the IIC Address
         const   byte     TWIAddr = 0x02;
