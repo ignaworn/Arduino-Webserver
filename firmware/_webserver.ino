@@ -204,10 +204,8 @@ void ParseReq() {
                 SetPin(Pin, Value);
 
             // Change PWM output
-            #ifdef PWM_CONTROL
-                else if (Mode == 'L')
-                    SetPWMPin(Pin, Value);
-            #endif
+            else if (Mode == 'L')
+                SetPWMPin(Pin, Value);
 
             // Change Parameter
             else if (Mode == 'P')
