@@ -12,12 +12,13 @@
             // index into HTTP_req buffer
             char req_index = 0;
 
+#endif
 
 
 
-
-    void WebServer() {
-
+void WebServer() {
+    // Do not run if WEBSERVER Flag is not active
+    #ifdef WEBSERVER
         // Get active clients
         client = server.available();
 
@@ -75,7 +76,8 @@
             }
         }
         client.stop();
-    }
+    #endif
+}
 
 
 
@@ -83,10 +85,12 @@
 
 
 
-    // ---------------------------------------------------
-    //           WEB SERVER - CLIENT XML
-    // ---------------------------------------------------
-    void ClientXML() {
+// ---------------------------------------------------
+//           WEB SERVER - CLIENT XML
+// ---------------------------------------------------
+void ClientXML() {
+    // Do not run if WEBSERVER Flag is not active
+    #ifdef WEBSERVER
 
         client << "HTTP/1.1 200 OK" << endl
                 << "Content-Type: text/xml" << endl
@@ -160,21 +164,24 @@
 
         // Close XML Tag
         client << "</arduino>" << endl;
+    #endif
 
-    }
-
-
-
+}
 
 
 
 
 
 
-    // ---------------------------------------------------
-    //           WEB SERVER - PARSE REQUEST
-    // ---------------------------------------------------
-    void ParseReq() {
+
+
+
+// ---------------------------------------------------
+//           WEB SERVER - PARSE REQUEST
+// ---------------------------------------------------
+void ParseReq() {
+    // Do not run if WEBSERVER Flag is not active
+    #ifdef WEBSERVER
         char _data[14] = { '0', 'x' ,HTTP_req[req_index-7], HTTP_req[req_index-6], ' ', '0', 'x', HTTP_req[req_index-4], HTTP_req[req_index-3], ' ', '0', 'x', HTTP_req[req_index-2], HTTP_req[req_index-1] };
         char * pEnd;
 
@@ -264,5 +271,5 @@
         else {
             if (debug) Serial << "Attempted to communicate with an unknown I2C Slave #" << Addr << endl;
         }
-    }
-#endif
+    #endif
+}
