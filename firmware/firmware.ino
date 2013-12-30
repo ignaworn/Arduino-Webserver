@@ -141,7 +141,7 @@ const   byte     SizeParameters = SIZE_PARAMETERS;
 
 // Create the EEPROM buffer
 #ifdef USE_EEPROM
-    int EEPROM_buffer[SizeParameters+1];
+    int EEPROM_buffer[32];
     int EEPROM_cursor = 0;
 #endif
 
