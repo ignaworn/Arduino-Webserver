@@ -42,6 +42,7 @@
     #if DEVICE == 1
         // Define flags ( comment to disable )
         #define MASTER  // Define device as Master. Enable I2C Communication
+            #define SLAVE_LED // Enable Slave Led
         #define ETHERNET // Enables Ethernet.
             #define WEBSERVER   // Enable Webserver
             #define NTP_TIME // Enable Network Time Protocol
@@ -64,10 +65,6 @@
 
         // Number of parameters used in this device
         #define SIZE_PARAMETERS 2
-
-        // Enable Slave Led ( comment to disable )
-        #define SLAVE_LED
-
 
     #endif
 
