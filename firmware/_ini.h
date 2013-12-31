@@ -94,7 +94,11 @@
 
         // PWM Pin Declaration
         #ifdef PWM_CONTROL
-            const   byte     PWM[]        = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, A0};
+            const   byte     PWM[]        = {
+                #ifndef DEBUG
+                    0, 1,
+                #endif
+            2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, A0};
         #endif
 
         // Number of parameters used in this device
