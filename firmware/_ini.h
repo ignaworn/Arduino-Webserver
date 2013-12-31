@@ -7,7 +7,7 @@
         #include <WProgram.h>
     #endif
 
-    // Define the device ID
+    // Define the device ID TODO: Una lista mas compleja de dispositivos y poder tener las variables del resto
     //#define DEVICE 1
 
     // Automatic Device detection, since Arduino MEGA is Master and Arduino UNO is slave
@@ -63,7 +63,7 @@
             const   byte     PWM[]          = {  40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52 };
         #endif
 
-        // Number of parameters used in this device
+        // Number of parameters used in this device TODO: Mejorar el sistema de parametros. Que el tamaño se ajuste segun las Flags activas
         #define SIZE_PARAMETERS 2
 
     #endif
@@ -108,7 +108,7 @@
 //  ---------------------------------------------------
 //                  SLAVE CONTROL
 //  ---------------------------------------------------
-    // If MASTER Flag is defined, include the slave object class
+    // If MASTER Flag is defined, include the slave object class TODO: Tratar de hacer esto mejor
     #ifdef MASTER
         #include "lib_Slave.h"
 

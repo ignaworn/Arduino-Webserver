@@ -244,7 +244,7 @@ void setup() {
               if (debug) Serial << "Offline" << endl;
         #endif
 
-        // Define the Slave Interrupt Events
+        // Define the Slave Interrupt Events TODO: Receive event para Master (por ejemplo cuando se inicia el slave, reiniciar el maestro)
         #ifdef SLAVE
             // Start Request Event Interrupt
             Wire.onRequest(RequestEvent);
