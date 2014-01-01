@@ -37,6 +37,7 @@
 
     // Configuration for device 1
     #if DEVICE == 1
+        #define DEVICE_NAME "Master"
         // Define flags ( comment to disable )
         // -----------------------------------
         #define DEBUG               // Enable Debug messages
@@ -71,6 +72,7 @@
 
     // Configuration for device 2
     #if DEVICE == 2
+        #define DEVICE_NAME "Slave Led"
         // Define flags ( comment to disable )
         // -----------------------------------
         //#define DEBUG               // Enable Debug messages
