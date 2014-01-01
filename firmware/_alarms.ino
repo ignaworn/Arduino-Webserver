@@ -5,7 +5,7 @@
         SetParameters(0,0x01);
         // SlaveLed Parameter 0 ON
         #ifdef SLAVE_LED
-            Slave.SendData('P',0x00,0x01);
+            SlaveLED.SendData('P',0x00,0x01);
         #endif
     }
 #endif
