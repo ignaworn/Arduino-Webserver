@@ -1,6 +1,11 @@
 // Create PWM Power Pointer
     const   byte* PWM_Power = &Parameters[0];
 
+// Soft Reset
+void (softReset){
+    asm volatile ("  jmp 0");
+}
+
 // ---------------------------------------------------
 //                   SET DIGITAL PIN
 // ---------------------------------------------------
