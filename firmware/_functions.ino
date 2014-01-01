@@ -120,7 +120,7 @@ void StoreParameters() {
                 EEPROM.write(EEPROM_buffer[i], Parameters[EEPROM_buffer[i]]);
 
                 // Debug: Show params and values
-                if (debug) Serial << "Parameter: "<< EEPROM_buffer[i] <<" - Value: " << Parameters[EEPROM_buffer[i]] << " saved."<< endl;
+                if (debug) Serial << "*Parameter: "<< EEPROM_buffer[i] <<" - Value: " << Parameters[EEPROM_buffer[i]] << " saved."<< endl;
 
                 // Clear the buffer
                 EEPROM_buffer[i] = -1;
