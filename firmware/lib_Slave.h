@@ -18,7 +18,6 @@
 
         byte _Address;
         bool _Status;
-        bool _Setup;
         byte SizeParameters, SizeAnalogs, SizeInputs, SizeOutputs, SizePWM;
         byte Parameters[32], ANALOGS[32], INPUTS[32], OUTPUTS[32], PWM[32];
         byte _Parameters[32], _ANALOGS[32], _INPUTS[32], _OUTPUTS[32], _PWM[32];
@@ -89,10 +88,6 @@
 
     // Test connection and retrieve resource parameters
     void Slave::Setup() {
-       // Dont execute it twice.
-       if (_Setup)
-         return;
-
        // Test Connection
        TestConnection();
 
@@ -103,8 +98,6 @@
          // Update Pin values
          Update();
        }
-
-       _Setup = true;
     }
 
     // Test connection to Slave and check status
