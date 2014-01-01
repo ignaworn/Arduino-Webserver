@@ -113,9 +113,15 @@ const   byte     SizeParameters = SIZE_PARAMETERS;
 
 // Create the EEPROM buffer
 #ifdef USE_EEPROM
-    int EEPROM_buffer[32];
-    int EEPROM_cursor = 0;
+    byte EEPROM_buffer[32];
+    byte EEPROM_cursor = 0;
 #endif
+
+// Create the Slave buffer
+#ifdef MASTER
+    byte SLAVE_buffer[5];
+    byte SLAVE_cursor = 0;
+#endif;
 
 // ------------------------------------------------------------
 
@@ -234,10 +240,10 @@ void setup() {
 
         // Setup confection with SLAVE_LED
         #ifdef SLAVE_LED
-            if (debug) Serial << "Establishing connection with SLAVE #" << Slave.Address() << ": ";
-            Slave.Setup();
+            if (debug) Serial << "Establishing connection with SLAVE #" << SlaveLED.Address() << ": ";
+            SlaveLED.Setup();
 
-            if (Slave.Status() ) {
+            if (SlaveLED.Status() ) {
               if (debug) Serial << "Success" << endl;
             }
             else

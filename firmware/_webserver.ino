@@ -128,36 +128,36 @@ void ClientXML() {
 
         //If Slave is Online
         #ifdef SLAVE_LED
-            if ( Slave.Status() ) {
+            if ( SlaveLED.Status() ) {
 
                 // Update Slave values
-                Slave.Update();
+                SlaveLED.Update();
 
                 // Fetch I2CSlave_Led_Parameter data
-                if (Slave.Size('P') > 0)
-                    for (int i=0; i < Slave.Size('P'); i++)
-                        client << "<p i2c='" << Slave.Address() << "' id='" << Slave.ID('P', i ) << "'>" << Slave.Value('P', i ) << "</p>";
+                if (SlaveLED.Size('P') > 0)
+                    for (int i=0; i < SlaveLED.Size('P'); i++)
+                        client << "<p i2c='" << SlaveLED.Address() << "' id='" << SlaveLED.ID('P', i ) << "'>" << SlaveLED.Value('P', i ) << "</p>";
 
                 // Fetch I2CSlave_Led_Analog data
-                if (Slave.Size('A') > 0)
-                    for (int i = 0; i < Slave.Size('A'); i++)
-                        client << "<a i2c='" << Slave.Address() << "' pin='" << Slave.ID('A', i ) << "'>" << Slave.Value('A', i ) << "</a>";
+                if (SlaveLED.Size('A') > 0)
+                    for (int i = 0; i < SlaveLED.Size('A'); i++)
+                        client << "<a i2c='" << SlaveLED.Address() << "' pin='" << SlaveLED.ID('A', i ) << "'>" << SlaveLED.Value('A', i ) << "</a>";
 
                 // Fetch I2CSlave_Led_Inputs data
-                if (Slave.Size('I') > 0)
-                    for (int i = 0; i < Slave.Size('I'); i++)
-                        client << "<i i2c='" << Slave.Address() << "' pin='" << Slave.ID('I', i ) << "'>" << Slave.Value('I', i ) << "</i>";
+                if (SlaveLED.Size('I') > 0)
+                    for (int i = 0; i < SlaveLED.Size('I'); i++)
+                        client << "<i i2c='" << SlaveLED.Address() << "' pin='" << SlaveLED.ID('I', i ) << "'>" << SlaveLED.Value('I', i ) << "</i>";
 
                 // Fetch I2CSlave_Led_Outputs data
-                if (Slave.Size('O') > 0)
-                    for (int i = 0; i < Slave.Size('O'); i++)
-                        client << "<o i2c='" << Slave.Address() << "' pin='" << Slave.ID('O', i ) << "'>" << Slave.Value('O', i ) << "</o>";
+                if (SlaveLED.Size('O') > 0)
+                    for (int i = 0; i < SlaveLED.Size('O'); i++)
+                        client << "<o i2c='" << SlaveLED.Address() << "' pin='" << SlaveLED.ID('O', i ) << "'>" << SlaveLED.Value('O', i ) << "</o>";
 
                 // Fetch I2CSlave_Led_PWM data
                 #ifdef PWM_CONTROL
-                    if (Slave.Size('L') > 0)
-                        for (int i = 0; i < Slave.Size('L'); i++)
-                            client << "<l i2c='" << Slave.Address() << "' pin='" << Slave.ID('L', i ) << "'>" << Slave.Value('L', i ) << "</l>";
+                    if (SlaveLED.Size('L') > 0)
+                        for (int i = 0; i < SlaveLED.Size('L'); i++)
+                            client << "<l i2c='" << SlaveLED.Address() << "' pin='" << SlaveLED.ID('L', i ) << "'>" << SlaveLED.Value('L', i ) << "</l>";
                 #endif
             }
         #endif
@@ -216,10 +216,10 @@ void ParseReq() {
 
         // Slave LED
         #ifdef SLAVE_LED
-            else if ( Addr == Slave.Address() ) {
+            else if ( Addr == SlaveLED.Address() ) {
 
                 // Check if the Slave is connected
-                if (!Slave.Status() ) {
+                if (!SlaveLED.Status() ) {
                     if (debug) Serial << "Attempted to communicate with an offline I2C Slave #" << Addr << endl;
                     return;
                 }
@@ -227,7 +227,7 @@ void ParseReq() {
                 if (debug) Serial << "Sending instructions to SLAVE #" << Addr << ": ";
 
                 // Send data to Slave
-                Slave.SendData( Mode, Pin, Value );
+                SlaveLED.SendData( Mode, Pin, Value );
 
                 if (debug) Serial << "Success" << endl;
             }

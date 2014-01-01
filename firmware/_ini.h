@@ -126,7 +126,7 @@
 
         // Create the SlaveLed Object ( do not modify )
         #ifdef SLAVE_LED
-            Slave   Slave(0x02);
+            Slave   SlaveLED(0x02);
         #endif
     #endif
 

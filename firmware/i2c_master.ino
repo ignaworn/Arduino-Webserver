@@ -6,23 +6,11 @@
         byte Type = Wire.read();
         byte Addr = Wire.read();
 
-        // Receive a signal sent from a Slave to restart the Master
+        // Receive a signal sent from a Slave to startup
         if (Type == 0xFF) {
-
-            // Start SLAVE_LED
-            #ifdef SLAVE_LED
-                if (Addr == Slave.Address()) {
-                    if (debug) Serial << "Received presence from SLAVE #" << Slave.Address() << ": ";
-                    Slave.Setup();
-                    if (Slave.Status() ) {
-                      if (debug) Serial << "Success" << endl;
-                    }
-                    else
-                      if (debug) Serial << "Offline" << endl;
-                }
-            #endif
-
-
+            // Store the Address in a buffer
+            SLAVE_cursor++;
+            SLAVE_buffer[SLAVE_cursor] = Addr;
         }
 
 
