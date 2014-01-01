@@ -2,7 +2,7 @@
     const   byte* PWM_Power = &Parameters[0];
 
 // Soft Reset
-void (softReset){
+void softReset() {
     asm volatile ("  jmp 0");
 }
 
