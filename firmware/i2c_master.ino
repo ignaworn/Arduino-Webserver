@@ -1,4 +1,4 @@
-#if DEVICE_NAME == "Master"
+#if DEVICE_NAME == 'Master'
 
     void ReceiveEvent(int HowMany)  {
 

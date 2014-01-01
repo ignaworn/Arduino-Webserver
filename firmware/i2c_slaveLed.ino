@@ -1,4 +1,4 @@
-#if DEVICE_NAME == "Slave Led"
+#if DEVICE_NAME == 'Slave Led'
 
     void ReceiveEvent(int HowMany) {
 
