@@ -33,7 +33,9 @@
 //  ---------------------------------------------------
 //              DEVICE SPECIFIC CONFIGURATION
 //  ---------------------------------------------------
-
+    #define MASTER_ADDR 0x01
+    #define SLAVE_LED_ADDR 0x02
+    #define SLAVE_CP_ADDR 0x03
 
     // Configuration for device 1
     #if DEVICE == 1
@@ -50,9 +52,6 @@
         #define CONTROL_PLACARD     // Enable Placard Control
         #define PWM_CONTROL         // Enable PWM Control
         #define USE_EEPROM          // Enable EEPROM Memory (Store and read Parameters from EEPROM)
-
-        // Define the IIC Address
-        const   byte     TWIAddr = 0x01;
 
         //I/O Pin declaration
         const   byte     ANALOGS[]          = {  A2, A3, A6, A7, A8 , A9, A10, A11, A12, A13, A14, A15 };
@@ -86,9 +85,6 @@
         #define PWM_CONTROL           // Enable PWM Control
         #define USE_EEPROM            // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
-        // Define the IIC Address
-        const   byte     TWIAddr = 0x02;
-
         // I/O Pin declaration
         const   byte     ANALOGS[]        = {};
         const   byte     INPUTS[]         = {};
@@ -110,6 +106,16 @@
     #ifndef PWM_CONTROL
         const byte PWM[] = {};
     #endif
+
+    // Define the IIC Address
+    #if DEVICE_NAME == 'Master'
+        const   byte     TWIAddr = MASTER_ADDR;
+    #elif DEVICE_NAME == 'Slave Led'
+        const   byte     TWIAddr = SLAVE_LED_ADDR;
+    #elif DEVICE_NAME == 'Control Placard'
+        const   byte     TWIAddr = SLAVE_CP_ADDR;
+    #endif
+
 
 //  ---------------------------------------------------
 //                  SLAVE CONTROL
