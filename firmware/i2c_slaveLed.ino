@@ -1,4 +1,4 @@
-#ifdef SLAVE
+#if DEVICE_NAME == "Slave Led"
 
     void ReceiveEvent(int HowMany) {
 
