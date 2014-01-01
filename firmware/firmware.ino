@@ -244,13 +244,17 @@ void setup() {
               if (debug) Serial << "Offline" << endl;
         #endif
 
-        // Define the Slave Interrupt Events TODO: Receive event para Master (por ejemplo cuando se inicia el slave, reiniciar el maestro)
-        #ifdef SLAVE
-            // Start Request Event Interrupt
-            Wire.onRequest(RequestEvent);
+        // Define the I2C Interrupt Events
+        Wire.onRequest(RequestEvent);
+        Wire.onReceive(ReceiveEvent);
 
-            // Start Receive Event Interrupt
-            Wire.onReceive(ReceiveEvent);
+        #ifdef SLAVE
+            if (debug) Serial << "Sending online status to Master" << endl;
+
+            Wire.beginTransmission(MASTER_ADDR);
+            Wire.write(0xFF);
+            Wire.write(TWIAddr);
+            Wire.endTransmission();
         #endif
     #endif
 
