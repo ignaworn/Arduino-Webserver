@@ -159,6 +159,34 @@ void SetPower() {
     #endif
 }
 
+// ---------------------------------------------------
+//                 START SLAVES
+// ---------------------------------------------------
+
+void StartSlaves() {
+    #ifdef MASTER
+        if (SLAVE_cursor > 0) {
+            for (byte i = 0; i <= SLAVE_cursor; i++) {
+
+                // Startup Slave LED
+                #ifdef SLAVE_LED
+                    if(SLAVE_buffer[i] == SlaveLED.Address()) {
+                        if (debug) Serial << "Establishing connection with SLAVE #" << SlaveLED.Address() << ": ";
+                        SlaveLED.Setup();
+
+                        if (SlaveLED.Status() ) {
+                          if (debug) Serial << "Success" << endl;
+                        }
+                        else
+                          if (debug) Serial << "Offline" << endl;
+                    }
+                #endif
+                SLAVE_buffer[i] = -1;
+            }
+            SLAVE_cursor = 0;
+        }
+    #endif
+}
 
 // ---------------------------------------------------
 //                  NTP FUNCTIONS
