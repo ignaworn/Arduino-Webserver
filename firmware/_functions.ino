@@ -164,7 +164,9 @@ void SetPower() {
 // ---------------------------------------------------
 
 void StartSlaves() {
+    // Do not run if MASTER Flag is not active
     #ifdef MASTER
+        // Check if there is something in buffer
         if (SLAVE_cursor > 0) {
             for (byte i = 0; i <= SLAVE_cursor; i++) {
 
