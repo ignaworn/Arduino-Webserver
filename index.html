@@ -10,7 +10,6 @@
 
 		<script>
             var Hex;
-			var construct = true;
 			var Output = [];
 			var Get = "";
             var request;
@@ -61,6 +60,14 @@
                                 var PwmXML      = this.responseXML.getElementsByTagName('l');
                                 var ParamXML    = this.responseXML.getElementsByTagName('p');
 
+                                construct = true;
+                                document.getElementById("analog").innerHTML = "";
+                                document.getElementById("input").innerHTML = "";
+                                document.getElementById("output").innerHTML = "";
+                                document.getElementById("pwm").innerHTML = "";
+                                document.getElementById("param").innerHTML = "";
+                                document.getElementById("led").innerHTML = "";
+
                                 if (construct) {
                                     if (AnalogXML.length == 0)
                                         document.getElementById("analog").innerHTML += "<p>No pin is available as ANALOG</p>";
@@ -86,16 +93,12 @@
                                     var i2cAddr = parseInt(AnalogXML[i].getAttribute("i2c")).toString(16).toUpperCase();
 									var value   = AnalogXML[i].childNodes[0].nodeValue;
 
-									if (construct) {
-										document.getElementById("analog").innerHTML +=
-                                                "<div id='analog_style_" + i2cAddr + "_" + pin + "' >" +
-                                                i2cAddr + "." + pin + ": " +
-                                                "<span class='analog' id='analog_" + i2cAddr + "_" + pin + "'>" +
-                                                value +
-                                                "</span></div>";
-                                    }
-									else
-										document.getElementById("analog_" + i2cAddr + "_" + pin).innerHTML = value;
+                                    document.getElementById("analog").innerHTML +=
+                                            "<div id='analog_style_" + i2cAddr + "_" + pin + "' >" +
+                                            i2cAddr + "." + pin + ": " +
+                                            "<span class='analog' id='analog_" + i2cAddr + "_" + pin + "'>" +
+                                            value +
+                                            "</span></div>";
 
 								}
 
@@ -107,16 +110,12 @@
                                     var i2cAddr = parseInt(InputXML[i].getAttribute("i2c")).toString(16).toUpperCase();
 									var value   = InputXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
 
-									if (construct) {
-										document.getElementById("input").innerHTML +=
-                                                "<div id='input_style_" + i2cAddr + "_" + pin + "' >" +
-                                                i2cAddr + "." + pin + ": " +
-                                                "<span class='input' id='input_" + i2cAddr + "_" + pin + "'>" +
-                                                value +
-                                                "</span></div>";
-                                    }
-                                    else
-										document.getElementById("input_" + i2cAddr + "_" + pin).innerHTML = value;
+                                    document.getElementById("input").innerHTML +=
+                                            "<div id='input_style_" + i2cAddr + "_" + pin + "' >" +
+                                            i2cAddr + "." + pin + ": " +
+                                            "<span class='input' id='input_" + i2cAddr + "_" + pin + "'>" +
+                                            value +
+                                            "</span></div>";
 
                                     document.getElementById("input_style_" + i2cAddr + "_" + pin).setAttribute("class", value);
 								}
@@ -129,16 +128,13 @@
                                     var i2cAddr = parseInt(OutputXML[i].getAttribute("i2c")).toString(16).toUpperCase();
                                     var value   = OutputXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
 
-                                    if (construct)
-                                        document.getElementById("output").innerHTML +=
-                                                "<div id='output_style_" + i2cAddr + "_" + pin + "' " +
-                                                "onclick=\"SendReq('" + i2cAddr + "', 'M', '" + pin + "')\" >" +
-                                                i2cAddr + "." + pin + ": " +
-                                                "<span class='output' id='output_" + i2cAddr + "_" + pin + "'>"
-                                                + value +
-                                                "</span></div>";
-                                    else
-                                        document.getElementById("output_" + i2cAddr + "_" + pin).innerHTML = value;
+                                    document.getElementById("output").innerHTML +=
+                                            "<div id='output_style_" + i2cAddr + "_" + pin + "' " +
+                                            "onclick=\"SendReq('" + i2cAddr + "', 'M', '" + pin + "')\" >" +
+                                            i2cAddr + "." + pin + ": " +
+                                            "<span class='output' id='output_" + i2cAddr + "_" + pin + "'>"
+                                            + value +
+                                            "</span></div>";
 
                                     document.getElementById("output_style_" + i2cAddr + "_" + pin).setAttribute("class", value);
                                 }
@@ -152,17 +148,13 @@
                                     var value   = parseInt(PwmXML[i].childNodes[0].nodeValue).toString(16).toUpperCase();
                                         if (value.length < 2) value = "0"+value;
 
-                                    if (construct) {
-                                        document.getElementById("pwm").innerHTML +=
-                                                "<div id='pwm_style_" + i2cAddr + "_" + pin + "' " +
-                                                "onclick=\"SendReq('" + i2cAddr + "', 'L', '" + pin + "')\" >" +
-                                                i2cAddr + "." + pin + ": " +
-                                                "<span class='pwm' id='pwm_" + i2cAddr + "_" + pin + "'>" +
-                                                "0x" + value +
-                                                "</span></div>";
-                                    }
-                                    else
-                                        document.getElementById("pwm_" + i2cAddr + "_" + pin).innerHTML = "0x"+value;
+                                    document.getElementById("pwm").innerHTML +=
+                                            "<div id='pwm_style_" + i2cAddr + "_" + pin + "' " +
+                                            "onclick=\"SendReq('" + i2cAddr + "', 'L', '" + pin + "')\" >" +
+                                            i2cAddr + "." + pin + ": " +
+                                            "<span class='pwm' id='pwm_" + i2cAddr + "_" + pin + "'>" +
+                                            "0x" + value +
+                                            "</span></div>";
 
                                     document.getElementById("pwm_style_" + i2cAddr + "_" + pin).setAttribute("class", value);
                                 }
@@ -196,16 +188,13 @@
                                                 var Green   = GreenObj.innerHTML.substr(2,2);
                                                 var Blue    = BlueObj.innerHTML.substr(2,2);
 
-                                                if (construct) {
-                                                    document.getElementById("led").innerHTML +=
-                                                            "<div id='led_" + i2cAddr + "_" + Group + "' " +
-                                                                    "onclick=\"SetLed('" + i2cAddr + "', '" + RedPin + "', '" + GreenPin + "', '" + BluePin + "')\" >" +
-                                                                    "Led " + i2cAddr+"."+Group +
-                                                                    "</div>";
-                                                }
-                                                else {
-                                                    document.getElementById("led_"+i2cAddr+"_"+Group).style.backgroundColor = '#'+Red+Green+Blue;
-                                                }
+                                                document.getElementById("led").innerHTML +=
+                                                        "<div id='led_" + i2cAddr + "_" + Group + "' " +
+                                                                "onclick=\"SetLed('" + i2cAddr + "', '" + RedPin + "', '" + GreenPin + "', '" + BluePin + "')\" >" +
+                                                                "Led " + i2cAddr+"."+Group +
+                                                                "</div>";
+
+                                                document.getElementById("led_"+i2cAddr+"_"+Group).style.backgroundColor = '#'+Red+Green+Blue;
                                             }
                                         }
                                     }
@@ -219,29 +208,19 @@
                                     var int_i2cAddr = parseInt(ParamXML[i].getAttribute("i2c"));
                                     var value   = ParamXML[i].childNodes[0].nodeValue == 1 ? "ON" : "OFF";
 
-                                    if (construct) {
-                                        document.getElementById("param").innerHTML +=
-                                                "<div id='param_style_" + i2cAddr + "_" + id + "' " +
-                                                "onclick=\"SendReq('" + i2cAddr + "', 'P', '" + id + "')\" >" +
-                                                i2cAddr + "." + id + " <span class='txt'>NA</span>: " +
-                                                "<span class='param' id='param_" + i2cAddr + "_" + id + "'>"
-                                                + value + "</span></div>";
+                                    document.getElementById("param").innerHTML +=
+                                            "<div id='param_style_" + i2cAddr + "_" + id + "' " +
+                                            "onclick=\"SendReq('" + i2cAddr + "', 'P', '" + id + "')\" >" +
+                                            i2cAddr + "." + id + " <span class='txt'>NA</span>: " +
+                                            "<span class='param' id='param_" + i2cAddr + "_" + id + "'>"
+                                            + value + "</span></div>";
 
-                                        // Set the param Name
-                                        if (!(typeof ParamText[int_i2cAddr] === 'undefined') && !(typeof ParamText[int_i2cAddr][id] === 'undefined'))
-                                            document.getElementById("param_style_" + i2cAddr + "_" + id).getElementsByClassName("txt")[0].innerHTML = ParamText[int_i2cAddr][id];
-                                    }
-                                    else
-                                        document.getElementById("param_" + i2cAddr + "_" + id).innerHTML = value;
+                                    // Set the param Name
+                                    if (!(typeof ParamText[int_i2cAddr] === 'undefined') && !(typeof ParamText[int_i2cAddr][id] === 'undefined'))
+                                        document.getElementById("param_style_" + i2cAddr + "_" + id).getElementsByClassName("txt")[0].innerHTML = ParamText[int_i2cAddr][id];
 
                                     document.getElementById("param_style_" + i2cAddr + "_" + id).setAttribute("class", value);
                                 }
-
-
-
-								if (construct)
-									construct = false;
-
 							}
 						}
 					}
