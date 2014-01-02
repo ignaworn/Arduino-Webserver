@@ -18,6 +18,7 @@ Software:
 
 References:
 - WebServer example by David A. Mellis and modified by Tom Igoe
+- Arduino Ethernet Shield Web Server by startingelectronics.com - http://startingelectronics.com/tutorials/arduino/ethernet-shield-web-server-tutorial/
 - Ethernet library documentation: http://arduino.cc/en/Reference/Ethernet
 - EthernetUDP library documentation: http://arduino.cc/en/Tutorial/UdpNtpClient
 - SoftPWM library documentation: https://code.google.com/p/rogue-code/wiki/SoftPWMLibraryDocumentation
