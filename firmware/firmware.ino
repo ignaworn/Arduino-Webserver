@@ -238,18 +238,6 @@ void setup() {
             #endif
         #endif
 
-        // Setup confection with SLAVE_LED
-        #ifdef SLAVE_LED
-            if (debug) Serial << "Establishing connection with SLAVE #" << SlaveLED.Address() << ": ";
-            SlaveLED.Setup();
-
-            if (SlaveLED.Status() ) {
-              if (debug) Serial << "Success" << endl;
-            }
-            else
-              if (debug) Serial << "Offline" << endl;
-        #endif
-
         // Define the I2C Interrupt Events
         Wire.onRequest(RequestEvent);
         Wire.onReceive(ReceiveEvent);
@@ -261,6 +249,11 @@ void setup() {
             Wire.write(0xFF);
             Wire.write(TWIAddr);
             Wire.endTransmission();
+        #endif
+
+        #ifdef SLAVE_LED
+            SLAVE_cursor++;
+            SLAVE_buffer[SLAVE_cursor] = SlaveLED.Address();
         #endif
     #endif
 
@@ -274,6 +267,11 @@ void setup() {
 // ---------------------------------------------------
 
 void loop() {
+    // Startup Slaves
+    #ifdef MASTER
+        StartSlaves();
+    #endif
+
     // Web Server
     WebServer();
 
