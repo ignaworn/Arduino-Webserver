@@ -15,7 +15,9 @@
         void TestConnection();
         void PinData();
         void GetPage(byte Page, byte ReqSize, byte Store[]);
+        void Error();
 
+        int _Attempts;
         byte _Address;
         bool _Status;
         byte SizeParameters, SizeAnalogs, SizeInputs, SizeOutputs, SizePWM;
@@ -124,7 +126,8 @@
         Wire.write(Page);
 
         // Send de data to the I2C Slave
-        Wire.endTransmission();
+        if (Wire.endTransmission() != 0)
+            Error();
 
         // Start Handler for receive data.
         Wire.requestFrom(_Address, ReqSize);
@@ -198,4 +201,11 @@
        Wire.endTransmission();
     }
 
+    // Register an error, and if needed turn of the slave
+    void Slave::Error() {
+        _Attempts++;
+        if (_Attempts > 5) {
+            _Status = false;
+        }
+    }
 #endif
