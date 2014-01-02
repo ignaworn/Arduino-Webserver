@@ -204,8 +204,10 @@
     // Register an error, and if needed turn of the slave
     void Slave::Error() {
         _Attempts++;
+
         if (_Attempts > 5) {
             _Status = false;
+            _Attempts = 0;
         }
     }
 #endif
