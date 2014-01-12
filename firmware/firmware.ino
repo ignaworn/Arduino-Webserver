@@ -268,9 +268,7 @@ void setup() {
 
 void loop() {
     // Startup Slaves
-    #ifdef MASTER
-        StartSlaves();
-    #endif
+    StartSlaves();
 
     // Web Server
     WebServer();
