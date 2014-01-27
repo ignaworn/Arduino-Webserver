@@ -11,7 +11,7 @@
     //#define DEVICE 1
 
     // Automatic Device detection, since Arduino MEGA is Master and Arduino UNO is slave
-    #if defined(__AVR_ATmega328P__)
+    #if defined(__AVR_ATmega32U4__)
         #define DEVICE 2
     #elif defined(__AVR_ATmega2560__)
         #define DEVICE 1
@@ -87,16 +87,12 @@
 
         // I/O Pin declaration
         const   byte     ANALOGS[]        = {};
-        const   byte     INPUTS[]         = {};
-        const   byte     OUTPUTS[]        = {A1, A2};
+        const   byte     INPUTS[]         = {0,1};
+        const   byte     OUTPUTS[]        = {};
 
         // PWM Pin Declaration
         #ifdef PWM_CONTROL
-            const   byte     PWM[]        = {
-                #ifndef DEBUG
-                    0, 1,
-                #endif
-            2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, A0};
+            const   byte     PWM[]        = { 4, 5, 6, 7, 8, 9, 10, 16, 14, 15, A0, A1, A2, A3};
         #endif
 
         // Number of parameters used in this device
