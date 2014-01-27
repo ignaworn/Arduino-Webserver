@@ -49,7 +49,7 @@
         #define USE_ETHERNET        // Enables Ethernet.
             #define WEBSERVER       // Enable Webserver
             #define NTP_TIME        // Enable Network Time Protocol
-        #define CONTROL_PLACARD     // Enable Placard Control
+        //#define CONTROL_PLACARD     // Enable Placard Control
         #define PWM_CONTROL         // Enable PWM Control
         #define USE_EEPROM          // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
@@ -81,7 +81,7 @@
         //#define USE_ETHERNET        // Enables Ethernet.
         //    #define WEBSERVER       // Enable Webserver
         //    #define NTP_TIME        // Enable Network Time Protocol
-        //#define CONTROL_PLACARD     // Enable Placard Control
+        #define CONTROL_PLACARD     // Enable Placard Control
         #define PWM_CONTROL           // Enable PWM Control
         #define USE_EEPROM            // Enable EEPROM Memory (Store and read Parameters from EEPROM)
 
